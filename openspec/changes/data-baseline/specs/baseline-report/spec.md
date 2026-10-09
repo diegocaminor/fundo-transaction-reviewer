@@ -26,11 +26,13 @@ Each pre-registered prediction below MUST be evaluated by a pure check function 
 - Given overdrafts without NSF fee lines
 - When deltas are computed
 - Then NSF = 0 under both labelings, and offer delta = 0 (overdraft count is not priced)
+- Observed (seed 42): FAILED. Legacy NSF 2 vs truth 0 (routine savings sweeps contain "transfer"); offer delta 0 held.
 
 #### Scenario: biz_03 Trucking, 61 days
 - Given a 61-day history with no planted mislabels
 - When deltas are computed
 - Then legacy labels equal truth labels, offer delta is exactly 0, and avg monthly revenue uses history_days / 30
+- Observed (seed 42): FAILED. 2 collateral `internal_transfer→nsf` mislabels (NSF +2); offer delta exactly 0 held.
 
 #### Scenario: biz_04 Retailer with MCA
 - Given a funder funding credit counted as revenue and daily debits missed by punctuation
@@ -61,11 +63,13 @@ Each pre-registered prediction below MUST be evaluated by a pure check function 
 - Given one "N.S.F." line missed by legacy
 - When deltas are computed
 - Then legacy NSF = 5, truth NSF = 6, truth offer = 0, legacy offer > 0 (approves a decline)
+- Observed (seed 42): FAILED. Legacy NSF 7 (5 plain + 2 sweeps via the substring bug) vs truth 6; both decline. The punctuation miss alone (`planned_only`) would approve $67,478.75; `collateral_changes_outcome` = true.
 
 #### Scenario: biz_10 Consultant control
 - Given a clean control business
 - When deltas are computed
 - Then legacy labels equal truth labels and all feature and offer deltas are exactly 0
+- Observed (seed 42): FAILED. 2 collateral `internal_transfer→nsf` mislabels (NSF +2); offer delta exactly 0 held.
 
 ### Requirement: Collateral mislabels
 The generator MUST record which transactions are planted traps (`data/traps.json`: transaction id → trap name), without changing the label shape. The report MUST count, per business, legacy mislabels on non-trap transactions ("collateral") and MUST flag any business where collateral alone changes the offer decision (offer 0 vs > 0). Routine descriptions MUST NOT be filtered to avoid legacy keywords. A flagged business MUST be treated as a design problem to surface, not fixed by editing routine vocabulary.

@@ -31,7 +31,7 @@ None
 
 ## Approach
 
-Modules live under `src/fundo/`: schema, generate, legacy, features, offer, report, cli. They use local `random.Random(seed)`, a fixed start date, counter ids, sorted keys, and 2-decimal amounts. Features and offer stay label-source-agnostic, so the next change reuses them on corrected labels.
+Modules live under `fundo/` (flat layout; see design): schema, generate, legacy, features, offer, report, cli. They use a local per-business `random.Random` seeded from sha256(seed, business_id), a fixed start date, counter ids, sorted keys, and 2-decimal amounts. Features and offer stay label-source-agnostic, so the next change reuses them on corrected labels.
 
 ## Assumptions (user-approved)
 
@@ -48,7 +48,7 @@ Modules live under `src/fundo/`: schema, generate, legacy, features, offer, repo
 
 | Area | Impact | Description |
 |------|--------|-------------|
-| `src/fundo/` | New | Generator, engine, features, offer, report, CLI |
+| `fundo/` | New | Generator, engine, features, offer, report, CLI |
 | `data/` | New | transactions, businesses, ground_truth, legacy_labels, baseline_report |
 | `tests/`, `pyproject.toml` | New | pytest only |
 

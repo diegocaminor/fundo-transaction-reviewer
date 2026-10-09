@@ -76,7 +76,8 @@ Offer MUST be `max(0, 1.2 * avg_monthly_revenue - 20 * daily_funder_payments)`, 
 - When offer is computed
 - Then the offer is 0, not negative
 
-#### Scenario: Hand-computed biz_01
-- Given the biz_01 truth labels
+#### Scenario: Hand-computed fixtures and locked biz_01 values
+- Given small inline fixtures whose expected features and offer are derived by hand in the tests
 - When features and offer are computed
-- Then they equal pre-computed expected values in the tests
+- Then they equal the hand-derived values
+- And the full biz_01 values are locked by the committed report snapshot. This is regression protection, not an independent hand computation (changed from the original "hand-computed biz_01" scenario, which was impractical for 283 transactions; see tasks 6.2).
