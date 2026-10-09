@@ -32,13 +32,13 @@ def _has_hint(description):
     )
 
 
-def _mask(description):
+def mask_description(description):
     return " ".join(re.sub(r"\d", "#", description.lower()).split())
 
 
 def flag(txns, legacy, use_pfc=True):
     """Return {transaction_id: [rule ids]} for flagged transactions only."""
-    repeats = Counter((t["business_id"], _mask(t["description"]), t["amount"]) for t in txns)
+    repeats = Counter((t["business_id"], mask_description(t["description"]), t["amount"]) for t in txns)
     credits = defaultdict(list)
     for t in txns:
         if t["amount"] > 0:
@@ -60,7 +60,7 @@ def flag(txns, legacy, use_pfc=True):
         ):
             rules.append("R3")
         if group == "none" and not credit and repeats[
-            (t["business_id"], _mask(t["description"]), t["amount"])
+            (t["business_id"], mask_description(t["description"]), t["amount"])
         ] >= 5:
             rules.append("R4")
         if _has_hint(t["description"]):

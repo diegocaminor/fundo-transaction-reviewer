@@ -55,7 +55,7 @@ For a proposed correction `c` on business `b`, with `L` the legacy label set and
 
 #### Scenario: Offer change of 1%
 - Given offer(L) = 1000 and offer(L') = 990 (or 1010)
-- Then it is material (|Δ| = 1% of offer(L)); at 989.99 with no other change it is not, and 0.70 suffices
+- Then it is material (|Δ| = 1% of offer(L)); at 990.01 (|Δ| = 0.999% of offer(L)) with no other change it is not, and 0.70 suffices
 
 #### Scenario: Count and share changes
 - Given a correction that changes only the overdraft count (or NSF count, or high-risk debit share) with no offer change
