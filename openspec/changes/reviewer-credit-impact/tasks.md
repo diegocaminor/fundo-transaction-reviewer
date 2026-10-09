@@ -106,7 +106,7 @@ Dependency graph: P1 -> P2 -> P3 -> P5 -> P6 -> P7 -> P8. P4 (sensitivity) depen
 - [x] 8.5 Measured-behavior tests (no xfail): assert structural invariants of the real committed report (status counts partition, four statuses sum, 10 businesses each with truth/legacy/reviewed, `needs_human_review` consistent with 0.40, Wilson upper bound > 0 when 0 errors, flag coverage labeled optimistic) and that `reviewer_hypotheses.evaluate` output is recorded in the report; do NOT assert that hypotheses pass.
 - [x] 8.6 GREEN: modify `fundo/cli.py` only (commands, `--refresh`, extended `all`, exit codes 0/1/3).
 - [x] 8.7 README "Running" section: `python -m fundo all` works offline from the committed cache and needs no key; `--refresh` forces live calls (requires `OPENAI_API_KEY`, appends to the cache); exit codes; how prompt/rule version bumps require refill; spend note; optimistic-coverage caveat.
-- [ ] 8.8 Clean-clone verification: clone the repo into a scratch dir, create a fresh venv without extra installs, unset `OPENAI_API_KEY`, run `python -m fundo all` twice and `.venv/bin/python -m pytest`; diff outputs against committed (must be empty).
+- [x] 8.8 Clean-clone verification: clone the repo into a scratch dir, create a fresh venv without extra installs, unset `OPENAI_API_KEY`, run `python -m fundo all` twice and `.venv/bin/python -m pytest`; diff outputs against committed (must be empty).
 - [x] 8.9 Full suite green; commit.
 
 ---
