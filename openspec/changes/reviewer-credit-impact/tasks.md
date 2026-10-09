@@ -24,15 +24,15 @@ Dependency graph: P1 -> P2 -> P3 -> P5 -> P6 -> P7 -> P8. P4 (sensitivity) depen
 
 ## Phase 2: Cache and urllib client (no real network)  | commit: `feat(llm): add committed JSONL cache and urllib client`
 
-- [ ] 2.1 RED: `tests/test_llm_cache.py` - key is sha256 of canonical JSON `{model, prompt_version, system_prompt_sha, payload, attempt, variant}`; changing any ONE component (including variant `pfc` vs `no_pfc` vs `adv_*`, and PFC-present vs absent payload) changes the key; same inputs give the same key. (RC: Key sensitivity)
-- [ ] 2.2 RED: hit with no `OPENAI_API_KEY` returns cached content and the injected transport is never called. (RC: Offline run)
-- [ ] 2.3 RED: miss with key calls fake transport once, appends a full record (`key, model, prompt_version, system_prompt_sha, variant, txn_id, attempt, content, refusal, usage, created`) and flushes/fsyncs BEFORE returning; test that if post-processing raises, the line is already in the file. (RC: Crash after a call)
-- [ ] 2.4 RED: miss without key raises `CacheMiss`; preflight over attempt-0 requests counts N misses (test with 3 missing). (RC: Missing entries)
-- [ ] 2.5 RED: `--refresh` semantics - skips lookup, requires key, appends (file stays append-only); duplicate keys: last line wins; invalid responses are cached too.
-- [ ] 2.6 RED: transport retries - 429/5xx/timeout get 3 tries with backoff (sleep patched), retries are not cached; exhaustion raises an API error (maps to exit 1 later).
-- [ ] 2.7 RED: `estimate_spend` sums uncached input, cached input and output tokens over all records at $0.40/$0.10/$1.60 per 1M; test on a fixture cache with known arithmetic. (RC: Budget, unit level)
-- [ ] 2.8 GREEN: implement `fundo/llm.py` (urllib Chat Completions client with strict `json_schema` response format, `CachedClient`, `PRICES`, `estimate_spend`, `CacheMiss`). Ensure no test touches the network (guard: patch `urllib.request.urlopen` to raise in a conftest/fixture for this module's tests).
-- [ ] 2.9 Full suite green; commit.
+- [x] 2.1 RED: `tests/test_llm_cache.py` - key is sha256 of canonical JSON `{model, prompt_version, system_prompt_sha, payload, attempt, variant}`; changing any ONE component (including variant `pfc` vs `no_pfc` vs `adv_*`, and PFC-present vs absent payload) changes the key; same inputs give the same key. (RC: Key sensitivity)
+- [x] 2.2 RED: hit with no `OPENAI_API_KEY` returns cached content and the injected transport is never called. (RC: Offline run)
+- [x] 2.3 RED: miss with key calls fake transport once, appends a full record (`key, model, prompt_version, system_prompt_sha, variant, txn_id, attempt, content, refusal, usage, created`) and flushes/fsyncs BEFORE returning; test that if post-processing raises, the line is already in the file. (RC: Crash after a call)
+- [x] 2.4 RED: miss without key raises `CacheMiss`; preflight over attempt-0 requests counts N misses (test with 3 missing). (RC: Missing entries)
+- [x] 2.5 RED: `--refresh` semantics - skips lookup, requires key, appends (file stays append-only); duplicate keys: last line wins; invalid responses are cached too.
+- [x] 2.6 RED: transport retries - 429/5xx/timeout get 3 tries with backoff (sleep patched), retries are not cached; exhaustion raises an API error (maps to exit 1 later).
+- [x] 2.7 RED: `estimate_spend` sums uncached input, cached input and output tokens over all records at $0.40/$0.10/$1.60 per 1M; test on a fixture cache with known arithmetic. (RC: Budget, unit level)
+- [x] 2.8 GREEN: implement `fundo/llm.py` (urllib Chat Completions client with strict `json_schema` response format, `CachedClient`, `PRICES`, `estimate_spend`, `CacheMiss`). Ensure no test touches the network (guard: patch `urllib.request.urlopen` to raise in a conftest/fixture for this module's tests).
+- [x] 2.9 Full suite green; commit.
 
 ## Phase 3: Reviewer policy (fake `complete`)  | commit: `feat(reviewer): add prompt, validation, retry and credit-impact gate`
 
