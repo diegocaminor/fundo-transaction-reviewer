@@ -53,15 +53,15 @@ Dependency graph: P1 -> P2 -> P3 -> P5 -> P6 -> P7 -> P8. P4 (sensitivity) depen
 
 ## Phase 4: Sensitivity (no LLM)  | commit: `feat(sensitivity): add mislabel Monte Carlo, NSF observability and truncation`
 
-- [ ] 4.1 RED: `tests/test_sensitivity.py` - `CONFUSION` covers all 14 groups, weights positive, outcomes are valid groups or `flip_business`; the map is authored in code (committed) and includes: nsf<->internal_transfer, active_advance->none, high_risk_*->none, none->not_average_monthly_revenue, `flip_business` on credits and debits. (CS: Mislabel Monte Carlo)
-- [ ] 4.2 RED: transaction-level rate - exactly `round(p*n)` distinct txns corrupted, each with exactly one corruption (group change XOR business flip); `uniform` never flips business and never keeps the same group (13 others). Output counts group changes vs business flips per model x rate. (CS: Mislabel Monte Carlo)
-- [ ] 4.3 RED: seeding - RNG from `int(sha256(f"{seed}:{model}:{p}:{rep}:{bid}")[:16],16)`; same seed gives byte-identical `sensitivity.json` across two runs (reduced reps in unit test); full grid is 3 rates x 2 models x 200 reps summarized per business with mean/p5/p95 (nearest-rank) for six features and offer. (CS: Grid and determinism)
-- [ ] 4.4 RED: `decision_flip_prob` - fixture where 30 of 200 reps flip gives 0.15. (CS: Flip probability)
-- [ ] 4.5 RED: `observability` - biz_02 has `nsf_observable=false`, truth `overdraft_count` proxy and manual-review `warning`; observable banks have no warning. (CS: NSF observability / biz_02)
-- [ ] 4.6 RED: truncation - for each of the nine 90-day businesses, keep dates >= END_DATE-60d, `history_days=61`, report 90 vs 61 features/offer/decision with offer delta and decision-flip boolean, truth labels, business vs itself; biz_03 excluded from the evidence set. (CS: Truncation compares a business with itself)
-- [ ] 4.7 RED: biz_03 carries a low-history warning and informational `nsf_x_90_over_61`; `compute_offer` output unchanged (offer formula untouched, existing offer tests still pass). (CS: Low-history warning)
-- [ ] 4.8 GREEN: implement `fundo/sensitivity.py` and write `data/sensitivity.json` (sorted keys). Do NOT wire into CLI yet (Phase 8).
-- [ ] 4.9 Full suite green; commit (includes `CONFUSION` authored; it is frozen no later than Phase 6).
+- [x] 4.1 RED: `tests/test_sensitivity.py` - `CONFUSION` covers all 14 groups, weights positive, outcomes are valid groups or `flip_business`; the map is authored in code (committed) and includes: nsf<->internal_transfer, active_advance->none, high_risk_*->none, none->not_average_monthly_revenue, `flip_business` on credits and debits. (CS: Mislabel Monte Carlo)
+- [x] 4.2 RED: transaction-level rate - exactly `round(p*n)` distinct txns corrupted, each with exactly one corruption (group change XOR business flip); `uniform` never flips business and never keeps the same group (13 others). Output counts group changes vs business flips per model x rate. (CS: Mislabel Monte Carlo)
+- [x] 4.3 RED: seeding - RNG from `int(sha256(f"{seed}:{model}:{p}:{rep}:{bid}")[:16],16)`; same seed gives byte-identical `sensitivity.json` across two runs (reduced reps in unit test); full grid is 3 rates x 2 models x 200 reps summarized per business with mean/p5/p95 (nearest-rank) for six features and offer. (CS: Grid and determinism)
+- [x] 4.4 RED: `decision_flip_prob` - fixture where 30 of 200 reps flip gives 0.15. (CS: Flip probability)
+- [x] 4.5 RED: `observability` - biz_02 has `nsf_observable=false`, truth `overdraft_count` proxy and manual-review `warning`; observable banks have no warning. (CS: NSF observability / biz_02)
+- [x] 4.6 RED: truncation - for each of the nine 90-day businesses, keep dates >= END_DATE-60d, `history_days=61`, report 90 vs 61 features/offer/decision with offer delta and decision-flip boolean, truth labels, business vs itself; biz_03 excluded from the evidence set. (CS: Truncation compares a business with itself)
+- [x] 4.7 RED: biz_03 carries a low-history warning and informational `nsf_x_90_over_61`; `compute_offer` output unchanged (offer formula untouched, existing offer tests still pass). (CS: Low-history warning)
+- [~] 4.8 GREEN: implement `fundo/sensitivity.py` (done) and write `data/sensitivity.json` (sorted keys) — DEFERRED until the sensitivity hypotheses are reviewed by the user and committed, so results are not seen before predictions. Do NOT wire into CLI yet (Phase 8).
+- [x] 4.9 Full suite green; commit (includes `CONFUSION` authored; it is frozen no later than Phase 6).
 
 ## Phase 5: Evaluation report (fixtures only)  | commit: `feat(review-report): add evaluation metrics, dollar error and flag coverage`
 
