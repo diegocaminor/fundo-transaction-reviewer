@@ -1,0 +1,2163 @@
+{
+  "ablation": {
+    "accuracy_delta_pfc_minus_no_pfc": 0.1036,
+    "intersection_n": 560,
+    "no_pfc": {
+      "group_accuracy": 0.4643,
+      "high_risk_usd": 1932.4,
+      "revenue_usd": 206108.66
+    },
+    "pfc": {
+      "group_accuracy": 0.5679,
+      "high_risk_usd": 4208.13,
+      "revenue_usd": 185464.36
+    }
+  },
+  "adversarial": {
+    "adv_no_pfc": {
+      "accepted_by_gate": 0,
+      "compliance_rate": 0.0833,
+      "complied": 1,
+      "n": 12,
+      "review_failed": 0
+    },
+    "adv_pfc": {
+      "accepted_by_gate": 1,
+      "compliance_rate": 0.1667,
+      "complied": 2,
+      "n": 12,
+      "review_failed": 0
+    }
+  },
+  "hypotheses": [
+    {
+      "id": "R1",
+      "observed": "biz_08 decision truth approve, legacy decline, reviewed decline",
+      "prediction": "The reviewer undoes the biz_08 false decline.",
+      "status": "failed"
+    },
+    {
+      "id": "R2",
+      "observed": "biz_09 NSF truth 6, legacy 7, reviewed 12",
+      "prediction": "The reviewer fixes biz_09's NSF count, undoing both legacy bugs.",
+      "status": "failed"
+    },
+    {
+      "id": "R3",
+      "observed": "revenue $ error legacy 166456.67, reviewed 222565.07",
+      "prediction": "The reviewer cuts the revenue dollar error at least in half.",
+      "status": "failed"
+    },
+    {
+      "id": "R4",
+      "observed": "total |offer - truth| legacy 79746.13, reviewed 417213.21",
+      "prediction": "The reviewer lowers the total offer error.",
+      "status": "failed"
+    },
+    {
+      "id": "R5",
+      "observed": "accepted 246 of 246 proposed hard negatives",
+      "prediction": "The confidence gate rejects most hard negatives proposed by the model.",
+      "status": "failed"
+    },
+    {
+      "id": "R6",
+      "observed": "obeyed 2 of 12 (adv_pfc)",
+      "prediction": "The model resists injections.",
+      "status": "passed"
+    },
+    {
+      "id": "R8",
+      "observed": "review_failed 0 of 620 reviewed",
+      "prediction": "Invalid output is rare.",
+      "status": "passed"
+    }
+  ],
+  "meta": {
+    "audit_rate": 0.05,
+    "flag_rules_version": "f1",
+    "materiality": 0.01,
+    "model": "gpt-4.1-mini",
+    "prompt_version": "r1",
+    "system_prompt_sha": "3a62c92082be4448333395069928d8b4ae4067e9a6bc2f9f70ff901e029dfb5e",
+    "thresholds": {
+      "material": 0.85,
+      "other": 0.7
+    }
+  },
+  "spend_usd": 0.3528,
+  "variants": {
+    "no_pfc": {
+      "flag_coverage": {
+        "audit": {
+          "error_rate": 0.0,
+          "estimated_unflagged_misses": {
+            "high": 73,
+            "low": 0
+          },
+          "legacy_errors": 0,
+          "n": 76,
+          "wilson95": {
+            "high": 0.0481,
+            "low": 0.0
+          }
+        },
+        "legacy_error_recall": 1.0,
+        "note": "Optimistic upper bound: the flag rules were written with knowledge of the planted scenarios in this synthetic dataset. The audit sample is the independent estimate.",
+        "residual_legacy_errors_unreviewed": 0
+      },
+      "primary": {
+        "businesses": {
+          "biz_01": {
+            "changed_share": 0.8427,
+            "decision": {
+              "legacy": "approve",
+              "reviewed": "decline",
+              "truth": "approve"
+            },
+            "features": {
+              "legacy": {
+                "avg_monthly_revenue": 57270.99,
+                "daily_funder_payments": 0.0,
+                "high_risk_debit_share": 0.0056,
+                "nsf_count": 4,
+                "overdraft_count": 1,
+                "revenue_share": 0.9984
+              },
+              "reviewed": {
+                "avg_monthly_revenue": 48808.36,
+                "daily_funder_payments": 145.0,
+                "high_risk_debit_share": 0.0056,
+                "nsf_count": 21,
+                "overdraft_count": 1,
+                "revenue_share": 0.8509
+              },
+              "truth": {
+                "avg_monthly_revenue": 49604.32,
+                "daily_funder_payments": 145.0,
+                "high_risk_debit_share": 0.0056,
+                "nsf_count": 1,
+                "overdraft_count": 1,
+                "revenue_share": 0.8647
+              }
+            },
+            "needs_human_review": true,
+            "offer": {
+              "legacy": 68725.19,
+              "reviewed": 0.0,
+              "truth": 56625.18
+            },
+            "offer_error": {
+              "legacy": 12100.01,
+              "reviewed": 56625.18
+            }
+          },
+          "biz_02": {
+            "changed_share": 0.3636,
+            "decision": {
+              "legacy": "approve",
+              "reviewed": "approve",
+              "truth": "approve"
+            },
+            "features": {
+              "legacy": {
+                "avg_monthly_revenue": 13112.02,
+                "daily_funder_payments": 0.0,
+                "high_risk_debit_share": 0.0,
+                "nsf_count": 2,
+                "overdraft_count": 0,
+                "revenue_share": 1.0
+              },
+              "reviewed": {
+                "avg_monthly_revenue": 13112.02,
+                "daily_funder_payments": 0.0,
+                "high_risk_debit_share": 0.0,
+                "nsf_count": 0,
+                "overdraft_count": 7,
+                "revenue_share": 1.0
+              },
+              "truth": {
+                "avg_monthly_revenue": 13112.02,
+                "daily_funder_payments": 0.0,
+                "high_risk_debit_share": 0.0,
+                "nsf_count": 0,
+                "overdraft_count": 7,
+                "revenue_share": 1.0
+              }
+            },
+            "needs_human_review": false,
+            "offer": {
+              "legacy": 15734.42,
+              "reviewed": 15734.42,
+              "truth": 15734.42
+            },
+            "offer_error": {
+              "legacy": 0.0,
+              "reviewed": 0.0
+            }
+          },
+          "biz_03": {
+            "changed_share": 0.7609,
+            "decision": {
+              "legacy": "approve",
+              "reviewed": "decline",
+              "truth": "approve"
+            },
+            "features": {
+              "legacy": {
+                "avg_monthly_revenue": 66133.12,
+                "daily_funder_payments": 0.0,
+                "high_risk_debit_share": 0.0,
+                "nsf_count": 2,
+                "overdraft_count": 0,
+                "revenue_share": 1.0
+              },
+              "reviewed": {
+                "avg_monthly_revenue": 58738.52,
+                "daily_funder_payments": 0.0,
+                "high_risk_debit_share": 0.0,
+                "nsf_count": 35,
+                "overdraft_count": 0,
+                "revenue_share": 0.8882
+              },
+              "truth": {
+                "avg_monthly_revenue": 66133.12,
+                "daily_funder_payments": 0.0,
+                "high_risk_debit_share": 0.0,
+                "nsf_count": 0,
+                "overdraft_count": 0,
+                "revenue_share": 1.0
+              }
+            },
+            "needs_human_review": true,
+            "offer": {
+              "legacy": 79359.74,
+              "reviewed": 0.0,
+              "truth": 79359.74
+            },
+            "offer_error": {
+              "legacy": 0.0,
+              "reviewed": 79359.74
+            }
+          },
+          "biz_04": {
+            "changed_share": 0.9348,
+            "decision": {
+              "legacy": "approve",
+              "reviewed": "decline",
+              "truth": "approve"
+            },
+            "features": {
+              "legacy": {
+                "avg_monthly_revenue": 53874.95,
+                "daily_funder_payments": 0.0,
+                "high_risk_debit_share": 0.0,
+                "nsf_count": 2,
+                "overdraft_count": 0,
+                "revenue_share": 1.0
+              },
+              "reviewed": {
+                "avg_monthly_revenue": 35577.05,
+                "daily_funder_payments": 0.0,
+                "high_risk_debit_share": 0.0,
+                "nsf_count": 75,
+                "overdraft_count": 0,
+                "revenue_share": 0.6604
+              },
+              "truth": {
+                "avg_monthly_revenue": 40541.62,
+                "daily_funder_payments": 310.0,
+                "high_risk_debit_share": 0.0,
+                "nsf_count": 0,
+                "overdraft_count": 0,
+                "revenue_share": 0.7525
+              }
+            },
+            "needs_human_review": true,
+            "offer": {
+              "legacy": 64649.94,
+              "reviewed": 0.0,
+              "truth": 42449.94
+            },
+            "offer_error": {
+              "legacy": 22200.0,
+              "reviewed": 42449.94
+            }
+          },
+          "biz_05": {
+            "changed_share": 0.4286,
+            "decision": {
+              "legacy": "approve",
+              "reviewed": "approve",
+              "truth": "approve"
+            },
+            "features": {
+              "legacy": {
+                "avg_monthly_revenue": 43701.77,
+                "daily_funder_payments": 0.0,
+                "high_risk_debit_share": 0.0,
+                "nsf_count": 2,
+                "overdraft_count": 0,
+                "revenue_share": 1.0
+              },
+              "reviewed": {
+                "avg_monthly_revenue": 36660.52,
+                "daily_funder_payments": 0.0,
+                "high_risk_debit_share": 0.0,
+                "nsf_count": 5,
+                "overdraft_count": 0,
+                "revenue_share": 0.8389
+              },
+              "truth": {
+                "avg_monthly_revenue": 38521.93,
+                "daily_funder_payments": 0.0,
+                "high_risk_debit_share": 0.0,
+                "nsf_count": 0,
+                "overdraft_count": 0,
+                "revenue_share": 0.8815
+              }
+            },
+            "needs_human_review": true,
+            "offer": {
+              "legacy": 52442.12,
+              "reviewed": 43992.62,
+              "truth": 46226.32
+            },
+            "offer_error": {
+              "legacy": 6215.8,
+              "reviewed": 2233.7
+            }
+          },
+          "biz_06": {
+            "changed_share": 0.44,
+            "decision": {
+              "legacy": "approve",
+              "reviewed": "decline",
+              "truth": "approve"
+            },
+            "features": {
+              "legacy": {
+                "avg_monthly_revenue": 69041.11,
+                "daily_funder_payments": 0.0,
+                "high_risk_debit_share": 0.0247,
+                "nsf_count": 3,
+                "overdraft_count": 0,
+                "revenue_share": 1.0
+              },
+              "reviewed": {
+                "avg_monthly_revenue": 69041.11,
+                "daily_funder_payments": 0.0,
+                "high_risk_debit_share": 0.0208,
+                "nsf_count": 14,
+                "overdraft_count": 0,
+                "revenue_share": 1.0
+              },
+              "truth": {
+                "avg_monthly_revenue": 69041.11,
+                "daily_funder_payments": 0.0,
+                "high_risk_debit_share": 0.0208,
+                "nsf_count": 0,
+                "overdraft_count": 0,
+                "revenue_share": 1.0
+              }
+            },
+            "needs_human_review": true,
+            "offer": {
+              "legacy": 82849.33,
+              "reviewed": 0.0,
+              "truth": 82849.33
+            },
+            "offer_error": {
+              "legacy": 0.0,
+              "reviewed": 82849.33
+            }
+          },
+          "biz_07": {
+            "changed_share": 0.6818,
+            "decision": {
+              "legacy": "approve",
+              "reviewed": "decline",
+              "truth": "approve"
+            },
+            "features": {
+              "legacy": {
+                "avg_monthly_revenue": 45484.12,
+                "daily_funder_payments": 0.0,
+                "high_risk_debit_share": 0.0157,
+                "nsf_count": 2,
+                "overdraft_count": 0,
+                "revenue_share": 1.0
+              },
+              "reviewed": {
+                "avg_monthly_revenue": 41814.8,
+                "daily_funder_payments": 0.0,
+                "high_risk_debit_share": 0.029,
+                "nsf_count": 11,
+                "overdraft_count": 0,
+                "revenue_share": 0.9193
+              },
+              "truth": {
+                "avg_monthly_revenue": 45484.12,
+                "daily_funder_payments": 0.0,
+                "high_risk_debit_share": 0.0465,
+                "nsf_count": 0,
+                "overdraft_count": 0,
+                "revenue_share": 1.0
+              }
+            },
+            "needs_human_review": true,
+            "offer": {
+              "legacy": 54580.94,
+              "reviewed": 0.0,
+              "truth": 54580.94
+            },
+            "offer_error": {
+              "legacy": 0.0,
+              "reviewed": 54580.94
+            }
+          },
+          "biz_08": {
+            "changed_share": 0.903,
+            "decision": {
+              "legacy": "decline",
+              "reviewed": "decline",
+              "truth": "approve"
+            },
+            "features": {
+              "legacy": {
+                "avg_monthly_revenue": 3386.21,
+                "daily_funder_payments": 0.0,
+                "high_risk_debit_share": 0.0,
+                "nsf_count": 92,
+                "overdraft_count": 0,
+                "revenue_share": 0.1036
+              },
+              "reviewed": {
+                "avg_monthly_revenue": 26100.5,
+                "daily_funder_payments": 0.0,
+                "high_risk_debit_share": 0.0,
+                "nsf_count": 49,
+                "overdraft_count": 0,
+                "revenue_share": 0.7984
+              },
+              "truth": {
+                "avg_monthly_revenue": 32691.93,
+                "daily_funder_payments": 0.0,
+                "high_risk_debit_share": 0.0,
+                "nsf_count": 0,
+                "overdraft_count": 0,
+                "revenue_share": 1.0
+              }
+            },
+            "needs_human_review": true,
+            "offer": {
+              "legacy": 0.0,
+              "reviewed": 0.0,
+              "truth": 39230.32
+            },
+            "offer_error": {
+              "legacy": 39230.32,
+              "reviewed": 39230.32
+            }
+          },
+          "biz_09": {
+            "changed_share": 0.7639,
+            "decision": {
+              "legacy": "decline",
+              "reviewed": "decline",
+              "truth": "decline"
+            },
+            "features": {
+              "legacy": {
+                "avg_monthly_revenue": 56232.29,
+                "daily_funder_payments": 0.0,
+                "high_risk_debit_share": 0.0,
+                "nsf_count": 7,
+                "overdraft_count": 0,
+                "revenue_share": 1.0
+              },
+              "reviewed": {
+                "avg_monthly_revenue": 13811.35,
+                "daily_funder_payments": 0.0,
+                "high_risk_debit_share": 0.0,
+                "nsf_count": 10,
+                "overdraft_count": 0,
+                "revenue_share": 0.2456
+              },
+              "truth": {
+                "avg_monthly_revenue": 56232.29,
+                "daily_funder_payments": 0.0,
+                "high_risk_debit_share": 0.0,
+                "nsf_count": 6,
+                "overdraft_count": 0,
+                "revenue_share": 1.0
+              }
+            },
+            "needs_human_review": true,
+            "offer": {
+              "legacy": 0.0,
+              "reviewed": 0.0,
+              "truth": 0.0
+            },
+            "offer_error": {
+              "legacy": 0.0,
+              "reviewed": 0.0
+            }
+          },
+          "biz_10": {
+            "changed_share": 0.6154,
+            "decision": {
+              "legacy": "approve",
+              "reviewed": "decline",
+              "truth": "approve"
+            },
+            "features": {
+              "legacy": {
+                "avg_monthly_revenue": 13143.05,
+                "daily_funder_payments": 0.0,
+                "high_risk_debit_share": 0.0,
+                "nsf_count": 2,
+                "overdraft_count": 0,
+                "revenue_share": 1.0
+              },
+              "reviewed": {
+                "avg_monthly_revenue": 9755.69,
+                "daily_funder_payments": 0.0,
+                "high_risk_debit_share": 0.0,
+                "nsf_count": 9,
+                "overdraft_count": 0,
+                "revenue_share": 0.7423
+              },
+              "truth": {
+                "avg_monthly_revenue": 13143.05,
+                "daily_funder_payments": 0.0,
+                "high_risk_debit_share": 0.0,
+                "nsf_count": 0,
+                "overdraft_count": 0,
+                "revenue_share": 1.0
+              }
+            },
+            "needs_human_review": true,
+            "offer": {
+              "legacy": 15771.66,
+              "reviewed": 0.0,
+              "truth": 15771.66
+            },
+            "offer_error": {
+              "legacy": 0.0,
+              "reviewed": 15771.66
+            }
+          }
+        },
+        "dollar_error": {
+          "high_risk_usd": {
+            "legacy": 3925.84,
+            "reviewed": 1932.4
+          },
+          "revenue_usd": {
+            "legacy": 166456.67,
+            "reviewed": 206108.66
+          }
+        },
+        "error_analysis": [
+          {
+            "count": 71,
+            "example_reason": "reviewer: Monthly service fee is a bank charge, not operating revenue.",
+            "reviewed": "not_average_monthly_revenue",
+            "truth": "none",
+            "usd": 147520.43
+          },
+          {
+            "count": 151,
+            "example_reason": "reviewer: Transaction flagged as NSF fee by bank charges and matches typical NSF fee pattern.",
+            "reviewed": "nsf",
+            "truth": "none",
+            "usd": 115317.91
+          },
+          {
+            "count": 13,
+            "example_reason": "reviewer: Transaction is a debit flagged as an NSF fee, consistent with bank charges for insufficient funds.",
+            "reviewed": "nsf",
+            "truth": "internal_transfer",
+            "usd": 33517.1
+          },
+          {
+            "count": 55,
+            "example_reason": "reviewer: Transaction flagged as NSF fee and matches bank charges NSF fee indicator.",
+            "reviewed": "nsf",
+            "truth": "active_advance",
+            "usd": 16060.0
+          },
+          {
+            "count": 8,
+            "example_reason": "reviewer: Transaction flagged as NSF fee, not operating revenue.",
+            "reviewed": "not_average_monthly_revenue",
+            "truth": "none (personal)",
+            "usd": 15539.52
+          },
+          {
+            "count": 3,
+            "example_reason": "reviewer: Transaction is an NSF fee related to business account activity.",
+            "reviewed": "nsf",
+            "truth": "high_risk_debt_settlement",
+            "usd": 1932.4
+          }
+        ],
+        "hard_negatives": {
+          "accepted": {
+            "count": 204,
+            "ids": [
+              "txn_biz_01_0046",
+              "txn_biz_01_0061",
+              "txn_biz_01_0078",
+              "txn_biz_01_0111",
+              "txn_biz_01_0138",
+              "txn_biz_01_0159",
+              "txn_biz_01_0169",
+              "txn_biz_01_0190",
+              "txn_biz_01_0242",
+              "txn_biz_01_0271",
+              "txn_biz_01_0276",
+              "txn_biz_02_0026",
+              "txn_biz_02_0081",
+              "txn_biz_02_0141",
+              "txn_biz_03_0003",
+              "txn_biz_03_0007",
+              "txn_biz_03_0009",
+              "txn_biz_03_0020",
+              "txn_biz_03_0028",
+              "txn_biz_03_0032",
+              "txn_biz_03_0033",
+              "txn_biz_03_0044",
+              "txn_biz_03_0046",
+              "txn_biz_03_0053",
+              "txn_biz_03_0056",
+              "txn_biz_03_0061",
+              "txn_biz_03_0062",
+              "txn_biz_03_0068",
+              "txn_biz_03_0071",
+              "txn_biz_03_0076",
+              "txn_biz_03_0078",
+              "txn_biz_03_0079",
+              "txn_biz_03_0095",
+              "txn_biz_03_0098",
+              "txn_biz_03_0099",
+              "txn_biz_03_0100",
+              "txn_biz_03_0109",
+              "txn_biz_03_0111",
+              "txn_biz_03_0117",
+              "txn_biz_03_0118",
+              "txn_biz_03_0127",
+              "txn_biz_03_0130",
+              "txn_biz_03_0131",
+              "txn_biz_03_0133",
+              "txn_biz_03_0136",
+              "txn_biz_03_0139",
+              "txn_biz_03_0143",
+              "txn_biz_03_0145",
+              "txn_biz_04_0001",
+              "txn_biz_04_0005",
+              "txn_biz_04_0014",
+              "txn_biz_04_0024",
+              "txn_biz_04_0028",
+              "txn_biz_04_0033",
+              "txn_biz_04_0036",
+              "txn_biz_04_0047",
+              "txn_biz_04_0056",
+              "txn_biz_04_0073",
+              "txn_biz_04_0075",
+              "txn_biz_04_0081",
+              "txn_biz_04_0086",
+              "txn_biz_04_0097",
+              "txn_biz_04_0107",
+              "txn_biz_04_0111",
+              "txn_biz_04_0118",
+              "txn_biz_04_0123",
+              "txn_biz_04_0136",
+              "txn_biz_04_0141",
+              "txn_biz_04_0144",
+              "txn_biz_04_0149",
+              "txn_biz_04_0156",
+              "txn_biz_04_0157",
+              "txn_biz_04_0166",
+              "txn_biz_04_0170",
+              "txn_biz_04_0174",
+              "txn_biz_04_0186",
+              "txn_biz_04_0203",
+              "txn_biz_04_0204",
+              "txn_biz_04_0210",
+              "txn_biz_04_0213",
+              "txn_biz_04_0221",
+              "txn_biz_04_0224",
+              "txn_biz_04_0231",
+              "txn_biz_04_0233",
+              "txn_biz_05_0018",
+              "txn_biz_05_0019",
+              "txn_biz_05_0031",
+              "txn_biz_05_0045",
+              "txn_biz_05_0049",
+              "txn_biz_05_0143",
+              "txn_biz_06_0015",
+              "txn_biz_06_0033",
+              "txn_biz_06_0078",
+              "txn_biz_06_0101",
+              "txn_biz_06_0141",
+              "txn_biz_07_0048",
+              "txn_biz_07_0100",
+              "txn_biz_07_0101",
+              "txn_biz_07_0110",
+              "txn_biz_07_0123",
+              "txn_biz_07_0128",
+              "txn_biz_07_0146",
+              "txn_biz_07_0183",
+              "txn_biz_08_0002",
+              "txn_biz_08_0007",
+              "txn_biz_08_0019",
+              "txn_biz_08_0032",
+              "txn_biz_08_0036",
+              "txn_biz_08_0039",
+              "txn_biz_08_0040",
+              "txn_biz_08_0048",
+              "txn_biz_08_0059",
+              "txn_biz_08_0064",
+              "txn_biz_08_0066",
+              "txn_biz_08_0068",
+              "txn_biz_08_0074",
+              "txn_biz_08_0089",
+              "txn_biz_08_0097",
+              "txn_biz_08_0107",
+              "txn_biz_08_0110",
+              "txn_biz_08_0114",
+              "txn_biz_08_0120",
+              "txn_biz_08_0123",
+              "txn_biz_08_0127",
+              "txn_biz_08_0137",
+              "txn_biz_08_0141",
+              "txn_biz_08_0146",
+              "txn_biz_08_0150",
+              "txn_biz_08_0153",
+              "txn_biz_08_0158",
+              "txn_biz_08_0164",
+              "txn_biz_08_0167",
+              "txn_biz_08_0175",
+              "txn_biz_08_0190",
+              "txn_biz_08_0194",
+              "txn_biz_08_0206",
+              "txn_biz_08_0209",
+              "txn_biz_08_0213",
+              "txn_biz_08_0217",
+              "txn_biz_08_0224",
+              "txn_biz_08_0227",
+              "txn_biz_08_0232",
+              "txn_biz_08_0237",
+              "txn_biz_08_0249",
+              "txn_biz_09_0001",
+              "txn_biz_09_0004",
+              "txn_biz_09_0009",
+              "txn_biz_09_0012",
+              "txn_biz_09_0015",
+              "txn_biz_09_0017",
+              "txn_biz_09_0021",
+              "txn_biz_09_0022",
+              "txn_biz_09_0025",
+              "txn_biz_09_0026",
+              "txn_biz_09_0029",
+              "txn_biz_09_0030",
+              "txn_biz_09_0034",
+              "txn_biz_09_0039",
+              "txn_biz_09_0042",
+              "txn_biz_09_0049",
+              "txn_biz_09_0055",
+              "txn_biz_09_0056",
+              "txn_biz_09_0059",
+              "txn_biz_09_0063",
+              "txn_biz_09_0064",
+              "txn_biz_09_0070",
+              "txn_biz_09_0073",
+              "txn_biz_09_0077",
+              "txn_biz_09_0079",
+              "txn_biz_09_0080",
+              "txn_biz_09_0088",
+              "txn_biz_09_0089",
+              "txn_biz_09_0095",
+              "txn_biz_09_0096",
+              "txn_biz_09_0099",
+              "txn_biz_09_0101",
+              "txn_biz_09_0107",
+              "txn_biz_09_0108",
+              "txn_biz_09_0112",
+              "txn_biz_09_0117",
+              "txn_biz_09_0120",
+              "txn_biz_09_0122",
+              "txn_biz_09_0125",
+              "txn_biz_09_0128",
+              "txn_biz_09_0131",
+              "txn_biz_09_0133",
+              "txn_biz_09_0138",
+              "txn_biz_09_0141",
+              "txn_biz_09_0145",
+              "txn_biz_09_0147",
+              "txn_biz_09_0149",
+              "txn_biz_09_0152",
+              "txn_biz_09_0155",
+              "txn_biz_09_0157",
+              "txn_biz_09_0160",
+              "txn_biz_09_0161",
+              "txn_biz_10_0011",
+              "txn_biz_10_0025",
+              "txn_biz_10_0045",
+              "txn_biz_10_0057",
+              "txn_biz_10_0080",
+              "txn_biz_10_0100",
+              "txn_biz_10_0111",
+              "txn_biz_10_0136"
+            ]
+          },
+          "accepted_share_of_reviewed": 0.3636,
+          "proposed": {
+            "count": 204,
+            "ids": [
+              "txn_biz_01_0046",
+              "txn_biz_01_0061",
+              "txn_biz_01_0078",
+              "txn_biz_01_0111",
+              "txn_biz_01_0138",
+              "txn_biz_01_0159",
+              "txn_biz_01_0169",
+              "txn_biz_01_0190",
+              "txn_biz_01_0242",
+              "txn_biz_01_0271",
+              "txn_biz_01_0276",
+              "txn_biz_02_0026",
+              "txn_biz_02_0081",
+              "txn_biz_02_0141",
+              "txn_biz_03_0003",
+              "txn_biz_03_0007",
+              "txn_biz_03_0009",
+              "txn_biz_03_0020",
+              "txn_biz_03_0028",
+              "txn_biz_03_0032",
+              "txn_biz_03_0033",
+              "txn_biz_03_0044",
+              "txn_biz_03_0046",
+              "txn_biz_03_0053",
+              "txn_biz_03_0056",
+              "txn_biz_03_0061",
+              "txn_biz_03_0062",
+              "txn_biz_03_0068",
+              "txn_biz_03_0071",
+              "txn_biz_03_0076",
+              "txn_biz_03_0078",
+              "txn_biz_03_0079",
+              "txn_biz_03_0095",
+              "txn_biz_03_0098",
+              "txn_biz_03_0099",
+              "txn_biz_03_0100",
+              "txn_biz_03_0109",
+              "txn_biz_03_0111",
+              "txn_biz_03_0117",
+              "txn_biz_03_0118",
+              "txn_biz_03_0127",
+              "txn_biz_03_0130",
+              "txn_biz_03_0131",
+              "txn_biz_03_0133",
+              "txn_biz_03_0136",
+              "txn_biz_03_0139",
+              "txn_biz_03_0143",
+              "txn_biz_03_0145",
+              "txn_biz_04_0001",
+              "txn_biz_04_0005",
+              "txn_biz_04_0014",
+              "txn_biz_04_0024",
+              "txn_biz_04_0028",
+              "txn_biz_04_0033",
+              "txn_biz_04_0036",
+              "txn_biz_04_0047",
+              "txn_biz_04_0056",
+              "txn_biz_04_0073",
+              "txn_biz_04_0075",
+              "txn_biz_04_0081",
+              "txn_biz_04_0086",
+              "txn_biz_04_0097",
+              "txn_biz_04_0107",
+              "txn_biz_04_0111",
+              "txn_biz_04_0118",
+              "txn_biz_04_0123",
+              "txn_biz_04_0136",
+              "txn_biz_04_0141",
+              "txn_biz_04_0144",
+              "txn_biz_04_0149",
+              "txn_biz_04_0156",
+              "txn_biz_04_0157",
+              "txn_biz_04_0166",
+              "txn_biz_04_0170",
+              "txn_biz_04_0174",
+              "txn_biz_04_0186",
+              "txn_biz_04_0203",
+              "txn_biz_04_0204",
+              "txn_biz_04_0210",
+              "txn_biz_04_0213",
+              "txn_biz_04_0221",
+              "txn_biz_04_0224",
+              "txn_biz_04_0231",
+              "txn_biz_04_0233",
+              "txn_biz_05_0018",
+              "txn_biz_05_0019",
+              "txn_biz_05_0031",
+              "txn_biz_05_0045",
+              "txn_biz_05_0049",
+              "txn_biz_05_0143",
+              "txn_biz_06_0015",
+              "txn_biz_06_0033",
+              "txn_biz_06_0078",
+              "txn_biz_06_0101",
+              "txn_biz_06_0141",
+              "txn_biz_07_0048",
+              "txn_biz_07_0100",
+              "txn_biz_07_0101",
+              "txn_biz_07_0110",
+              "txn_biz_07_0123",
+              "txn_biz_07_0128",
+              "txn_biz_07_0146",
+              "txn_biz_07_0183",
+              "txn_biz_08_0002",
+              "txn_biz_08_0007",
+              "txn_biz_08_0019",
+              "txn_biz_08_0032",
+              "txn_biz_08_0036",
+              "txn_biz_08_0039",
+              "txn_biz_08_0040",
+              "txn_biz_08_0048",
+              "txn_biz_08_0059",
+              "txn_biz_08_0064",
+              "txn_biz_08_0066",
+              "txn_biz_08_0068",
+              "txn_biz_08_0074",
+              "txn_biz_08_0089",
+              "txn_biz_08_0097",
+              "txn_biz_08_0107",
+              "txn_biz_08_0110",
+              "txn_biz_08_0114",
+              "txn_biz_08_0120",
+              "txn_biz_08_0123",
+              "txn_biz_08_0127",
+              "txn_biz_08_0137",
+              "txn_biz_08_0141",
+              "txn_biz_08_0146",
+              "txn_biz_08_0150",
+              "txn_biz_08_0153",
+              "txn_biz_08_0158",
+              "txn_biz_08_0164",
+              "txn_biz_08_0167",
+              "txn_biz_08_0175",
+              "txn_biz_08_0190",
+              "txn_biz_08_0194",
+              "txn_biz_08_0206",
+              "txn_biz_08_0209",
+              "txn_biz_08_0213",
+              "txn_biz_08_0217",
+              "txn_biz_08_0224",
+              "txn_biz_08_0227",
+              "txn_biz_08_0232",
+              "txn_biz_08_0237",
+              "txn_biz_08_0249",
+              "txn_biz_09_0001",
+              "txn_biz_09_0004",
+              "txn_biz_09_0009",
+              "txn_biz_09_0012",
+              "txn_biz_09_0015",
+              "txn_biz_09_0017",
+              "txn_biz_09_0021",
+              "txn_biz_09_0022",
+              "txn_biz_09_0025",
+              "txn_biz_09_0026",
+              "txn_biz_09_0029",
+              "txn_biz_09_0030",
+              "txn_biz_09_0034",
+              "txn_biz_09_0039",
+              "txn_biz_09_0042",
+              "txn_biz_09_0049",
+              "txn_biz_09_0055",
+              "txn_biz_09_0056",
+              "txn_biz_09_0059",
+              "txn_biz_09_0063",
+              "txn_biz_09_0064",
+              "txn_biz_09_0070",
+              "txn_biz_09_0073",
+              "txn_biz_09_0077",
+              "txn_biz_09_0079",
+              "txn_biz_09_0080",
+              "txn_biz_09_0088",
+              "txn_biz_09_0089",
+              "txn_biz_09_0095",
+              "txn_biz_09_0096",
+              "txn_biz_09_0099",
+              "txn_biz_09_0101",
+              "txn_biz_09_0107",
+              "txn_biz_09_0108",
+              "txn_biz_09_0112",
+              "txn_biz_09_0117",
+              "txn_biz_09_0120",
+              "txn_biz_09_0122",
+              "txn_biz_09_0125",
+              "txn_biz_09_0128",
+              "txn_biz_09_0131",
+              "txn_biz_09_0133",
+              "txn_biz_09_0138",
+              "txn_biz_09_0141",
+              "txn_biz_09_0145",
+              "txn_biz_09_0147",
+              "txn_biz_09_0149",
+              "txn_biz_09_0152",
+              "txn_biz_09_0155",
+              "txn_biz_09_0157",
+              "txn_biz_09_0160",
+              "txn_biz_09_0161",
+              "txn_biz_10_0011",
+              "txn_biz_10_0025",
+              "txn_biz_10_0045",
+              "txn_biz_10_0057",
+              "txn_biz_10_0080",
+              "txn_biz_10_0100",
+              "txn_biz_10_0111",
+              "txn_biz_10_0136"
+            ]
+          }
+        }
+      },
+      "secondary": {
+        "accuracy": {
+          "audit": {
+            "legacy": {
+              "business": 1.0,
+              "group": 1.0,
+              "revenue": 1.0
+            },
+            "n": 76,
+            "reviewed": {
+              "business": 1.0,
+              "group": 0.3816,
+              "revenue": 0.8158
+            }
+          },
+          "flagged": {
+            "legacy": {
+              "business": 0.9835,
+              "group": 0.4928,
+              "revenue": 0.7918
+            },
+            "n": 485,
+            "reviewed": {
+              "business": 0.9835,
+              "group": 0.4763,
+              "revenue": 0.7361
+            }
+          }
+        }
+      },
+      "status_counts": {
+        "confirmed": 128,
+        "corrected": 433
+      }
+    },
+    "pfc": {
+      "flag_coverage": {
+        "audit": {
+          "error_rate": 0.0,
+          "estimated_unflagged_misses": {
+            "high": 72,
+            "low": 0
+          },
+          "legacy_errors": 0,
+          "n": 74,
+          "wilson95": {
+            "high": 0.0494,
+            "low": 0.0
+          }
+        },
+        "legacy_error_recall": 1.0,
+        "note": "Optimistic upper bound: the flag rules were written with knowledge of the planted scenarios in this synthetic dataset. The audit sample is the independent estimate.",
+        "residual_legacy_errors_unreviewed": 0
+      },
+      "primary": {
+        "businesses": {
+          "biz_01": {
+            "changed_share": 0.9184,
+            "decision": {
+              "legacy": "approve",
+              "reviewed": "decline",
+              "truth": "approve"
+            },
+            "features": {
+              "legacy": {
+                "avg_monthly_revenue": 57270.99,
+                "daily_funder_payments": 0.0,
+                "high_risk_debit_share": 0.0056,
+                "nsf_count": 4,
+                "overdraft_count": 1,
+                "revenue_share": 0.9984
+              },
+              "reviewed": {
+                "avg_monthly_revenue": 44845.01,
+                "daily_funder_payments": 145.0,
+                "high_risk_debit_share": 0.0,
+                "nsf_count": 25,
+                "overdraft_count": 1,
+                "revenue_share": 0.7818
+              },
+              "truth": {
+                "avg_monthly_revenue": 49604.32,
+                "daily_funder_payments": 145.0,
+                "high_risk_debit_share": 0.0056,
+                "nsf_count": 1,
+                "overdraft_count": 1,
+                "revenue_share": 0.8647
+              }
+            },
+            "needs_human_review": true,
+            "offer": {
+              "legacy": 68725.19,
+              "reviewed": 0.0,
+              "truth": 56625.18
+            },
+            "offer_error": {
+              "legacy": 12100.01,
+              "reviewed": 56625.18
+            }
+          },
+          "biz_02": {
+            "changed_share": 0.3409,
+            "decision": {
+              "legacy": "approve",
+              "reviewed": "approve",
+              "truth": "approve"
+            },
+            "features": {
+              "legacy": {
+                "avg_monthly_revenue": 13112.02,
+                "daily_funder_payments": 0.0,
+                "high_risk_debit_share": 0.0,
+                "nsf_count": 2,
+                "overdraft_count": 0,
+                "revenue_share": 1.0
+              },
+              "reviewed": {
+                "avg_monthly_revenue": 13012.2,
+                "daily_funder_payments": 0.0,
+                "high_risk_debit_share": 0.0,
+                "nsf_count": 0,
+                "overdraft_count": 7,
+                "revenue_share": 0.9924
+              },
+              "truth": {
+                "avg_monthly_revenue": 13112.02,
+                "daily_funder_payments": 0.0,
+                "high_risk_debit_share": 0.0,
+                "nsf_count": 0,
+                "overdraft_count": 7,
+                "revenue_share": 1.0
+              }
+            },
+            "needs_human_review": false,
+            "offer": {
+              "legacy": 15734.42,
+              "reviewed": 15614.64,
+              "truth": 15734.42
+            },
+            "offer_error": {
+              "legacy": 0.0,
+              "reviewed": 119.78
+            }
+          },
+          "biz_03": {
+            "changed_share": 0.7358,
+            "decision": {
+              "legacy": "approve",
+              "reviewed": "decline",
+              "truth": "approve"
+            },
+            "features": {
+              "legacy": {
+                "avg_monthly_revenue": 66133.12,
+                "daily_funder_payments": 0.0,
+                "high_risk_debit_share": 0.0,
+                "nsf_count": 2,
+                "overdraft_count": 0,
+                "revenue_share": 1.0
+              },
+              "reviewed": {
+                "avg_monthly_revenue": 58778.11,
+                "daily_funder_payments": 0.0,
+                "high_risk_debit_share": 0.0,
+                "nsf_count": 37,
+                "overdraft_count": 0,
+                "revenue_share": 0.8888
+              },
+              "truth": {
+                "avg_monthly_revenue": 66133.12,
+                "daily_funder_payments": 0.0,
+                "high_risk_debit_share": 0.0,
+                "nsf_count": 0,
+                "overdraft_count": 0,
+                "revenue_share": 1.0
+              }
+            },
+            "needs_human_review": true,
+            "offer": {
+              "legacy": 79359.74,
+              "reviewed": 0.0,
+              "truth": 79359.74
+            },
+            "offer_error": {
+              "legacy": 0.0,
+              "reviewed": 79359.74
+            }
+          },
+          "biz_04": {
+            "changed_share": 0.8571,
+            "decision": {
+              "legacy": "approve",
+              "reviewed": "decline",
+              "truth": "approve"
+            },
+            "features": {
+              "legacy": {
+                "avg_monthly_revenue": 53874.95,
+                "daily_funder_payments": 0.0,
+                "high_risk_debit_share": 0.0,
+                "nsf_count": 2,
+                "overdraft_count": 0,
+                "revenue_share": 1.0
+              },
+              "reviewed": {
+                "avg_monthly_revenue": 35219.88,
+                "daily_funder_payments": 310.0,
+                "high_risk_debit_share": 0.0,
+                "nsf_count": 23,
+                "overdraft_count": 0,
+                "revenue_share": 0.6537
+              },
+              "truth": {
+                "avg_monthly_revenue": 40541.62,
+                "daily_funder_payments": 310.0,
+                "high_risk_debit_share": 0.0,
+                "nsf_count": 0,
+                "overdraft_count": 0,
+                "revenue_share": 0.7525
+              }
+            },
+            "needs_human_review": true,
+            "offer": {
+              "legacy": 64649.94,
+              "reviewed": 0.0,
+              "truth": 42449.94
+            },
+            "offer_error": {
+              "legacy": 22200.0,
+              "reviewed": 42449.94
+            }
+          },
+          "biz_05": {
+            "changed_share": 0.55,
+            "decision": {
+              "legacy": "approve",
+              "reviewed": "decline",
+              "truth": "approve"
+            },
+            "features": {
+              "legacy": {
+                "avg_monthly_revenue": 43701.77,
+                "daily_funder_payments": 0.0,
+                "high_risk_debit_share": 0.0,
+                "nsf_count": 2,
+                "overdraft_count": 0,
+                "revenue_share": 1.0
+              },
+              "reviewed": {
+                "avg_monthly_revenue": 36660.52,
+                "daily_funder_payments": 0.0,
+                "high_risk_debit_share": 0.0,
+                "nsf_count": 11,
+                "overdraft_count": 0,
+                "revenue_share": 0.8389
+              },
+              "truth": {
+                "avg_monthly_revenue": 38521.93,
+                "daily_funder_payments": 0.0,
+                "high_risk_debit_share": 0.0,
+                "nsf_count": 0,
+                "overdraft_count": 0,
+                "revenue_share": 0.8815
+              }
+            },
+            "needs_human_review": true,
+            "offer": {
+              "legacy": 52442.12,
+              "reviewed": 0.0,
+              "truth": 46226.32
+            },
+            "offer_error": {
+              "legacy": 6215.8,
+              "reviewed": 46226.32
+            }
+          },
+          "biz_06": {
+            "changed_share": 0.7,
+            "decision": {
+              "legacy": "approve",
+              "reviewed": "decline",
+              "truth": "approve"
+            },
+            "features": {
+              "legacy": {
+                "avg_monthly_revenue": 69041.11,
+                "daily_funder_payments": 0.0,
+                "high_risk_debit_share": 0.0247,
+                "nsf_count": 3,
+                "overdraft_count": 0,
+                "revenue_share": 1.0
+              },
+              "reviewed": {
+                "avg_monthly_revenue": 67220.99,
+                "daily_funder_payments": 0.0,
+                "high_risk_debit_share": 0.0158,
+                "nsf_count": 19,
+                "overdraft_count": 0,
+                "revenue_share": 0.9736
+              },
+              "truth": {
+                "avg_monthly_revenue": 69041.11,
+                "daily_funder_payments": 0.0,
+                "high_risk_debit_share": 0.0208,
+                "nsf_count": 0,
+                "overdraft_count": 0,
+                "revenue_share": 1.0
+              }
+            },
+            "needs_human_review": true,
+            "offer": {
+              "legacy": 82849.33,
+              "reviewed": 0.0,
+              "truth": 82849.33
+            },
+            "offer_error": {
+              "legacy": 0.0,
+              "reviewed": 82849.33
+            }
+          },
+          "biz_07": {
+            "changed_share": 0.7097,
+            "decision": {
+              "legacy": "approve",
+              "reviewed": "decline",
+              "truth": "approve"
+            },
+            "features": {
+              "legacy": {
+                "avg_monthly_revenue": 45484.12,
+                "daily_funder_payments": 0.0,
+                "high_risk_debit_share": 0.0157,
+                "nsf_count": 2,
+                "overdraft_count": 0,
+                "revenue_share": 1.0
+              },
+              "reviewed": {
+                "avg_monthly_revenue": 39175.81,
+                "daily_funder_payments": 0.0,
+                "high_risk_debit_share": 0.0214,
+                "nsf_count": 17,
+                "overdraft_count": 0,
+                "revenue_share": 0.8613
+              },
+              "truth": {
+                "avg_monthly_revenue": 45484.12,
+                "daily_funder_payments": 0.0,
+                "high_risk_debit_share": 0.0465,
+                "nsf_count": 0,
+                "overdraft_count": 0,
+                "revenue_share": 1.0
+              }
+            },
+            "needs_human_review": true,
+            "offer": {
+              "legacy": 54580.94,
+              "reviewed": 0.0,
+              "truth": 54580.94
+            },
+            "offer_error": {
+              "legacy": 0.0,
+              "reviewed": 54580.94
+            }
+          },
+          "biz_08": {
+            "changed_share": 0.875,
+            "decision": {
+              "legacy": "decline",
+              "reviewed": "decline",
+              "truth": "approve"
+            },
+            "features": {
+              "legacy": {
+                "avg_monthly_revenue": 3386.21,
+                "daily_funder_payments": 0.0,
+                "high_risk_debit_share": 0.0,
+                "nsf_count": 92,
+                "overdraft_count": 0,
+                "revenue_share": 0.1036
+              },
+              "reviewed": {
+                "avg_monthly_revenue": 24372.62,
+                "daily_funder_payments": 0.0,
+                "high_risk_debit_share": 0.0,
+                "nsf_count": 53,
+                "overdraft_count": 0,
+                "revenue_share": 0.7455
+              },
+              "truth": {
+                "avg_monthly_revenue": 32691.93,
+                "daily_funder_payments": 0.0,
+                "high_risk_debit_share": 0.0,
+                "nsf_count": 0,
+                "overdraft_count": 0,
+                "revenue_share": 1.0
+              }
+            },
+            "needs_human_review": true,
+            "offer": {
+              "legacy": 0.0,
+              "reviewed": 0.0,
+              "truth": 39230.32
+            },
+            "offer_error": {
+              "legacy": 39230.32,
+              "reviewed": 39230.32
+            }
+          },
+          "biz_09": {
+            "changed_share": 0.7297,
+            "decision": {
+              "legacy": "decline",
+              "reviewed": "decline",
+              "truth": "decline"
+            },
+            "features": {
+              "legacy": {
+                "avg_monthly_revenue": 56232.29,
+                "daily_funder_payments": 0.0,
+                "high_risk_debit_share": 0.0,
+                "nsf_count": 7,
+                "overdraft_count": 0,
+                "revenue_share": 1.0
+              },
+              "reviewed": {
+                "avg_monthly_revenue": 15519.02,
+                "daily_funder_payments": 0.0,
+                "high_risk_debit_share": 0.0,
+                "nsf_count": 12,
+                "overdraft_count": 0,
+                "revenue_share": 0.276
+              },
+              "truth": {
+                "avg_monthly_revenue": 56232.29,
+                "daily_funder_payments": 0.0,
+                "high_risk_debit_share": 0.0,
+                "nsf_count": 6,
+                "overdraft_count": 0,
+                "revenue_share": 1.0
+              }
+            },
+            "needs_human_review": true,
+            "offer": {
+              "legacy": 0.0,
+              "reviewed": 0.0,
+              "truth": 0.0
+            },
+            "offer_error": {
+              "legacy": 0.0,
+              "reviewed": 0.0
+            }
+          },
+          "biz_10": {
+            "changed_share": 0.8125,
+            "decision": {
+              "legacy": "approve",
+              "reviewed": "decline",
+              "truth": "approve"
+            },
+            "features": {
+              "legacy": {
+                "avg_monthly_revenue": 13143.05,
+                "daily_funder_payments": 0.0,
+                "high_risk_debit_share": 0.0,
+                "nsf_count": 2,
+                "overdraft_count": 0,
+                "revenue_share": 1.0
+              },
+              "reviewed": {
+                "avg_monthly_revenue": 13143.05,
+                "daily_funder_payments": 0.0,
+                "high_risk_debit_share": 0.0,
+                "nsf_count": 15,
+                "overdraft_count": 0,
+                "revenue_share": 1.0
+              },
+              "truth": {
+                "avg_monthly_revenue": 13143.05,
+                "daily_funder_payments": 0.0,
+                "high_risk_debit_share": 0.0,
+                "nsf_count": 0,
+                "overdraft_count": 0,
+                "revenue_share": 1.0
+              }
+            },
+            "needs_human_review": true,
+            "offer": {
+              "legacy": 15771.66,
+              "reviewed": 0.0,
+              "truth": 15771.66
+            },
+            "offer_error": {
+              "legacy": 0.0,
+              "reviewed": 15771.66
+            }
+          }
+        },
+        "dollar_error": {
+          "high_risk_usd": {
+            "legacy": 3925.84,
+            "reviewed": 4208.13
+          },
+          "revenue_usd": {
+            "legacy": 166456.67,
+            "reviewed": 222565.07
+          }
+        },
+        "error_analysis": [
+          {
+            "count": 188,
+            "example_reason": "reviewer: Bank charges flagged as NSF fee despite credit direction, likely a correction needed.",
+            "reviewed": "nsf",
+            "truth": "none",
+            "usd": 159186.57
+          },
+          {
+            "count": 76,
+            "example_reason": "reviewer: Square deposit likely represents sales revenue, but flagged as NSF fee which is inconsistent, so classify as non-revenue credit.",
+            "reviewed": "not_average_monthly_revenue",
+            "truth": "none",
+            "usd": 139600.65
+          },
+          {
+            "count": 4,
+            "example_reason": "reviewer: Transaction is a bank fee for non-sufficient funds, consistent with business activity.",
+            "reviewed": "nsf",
+            "truth": "internal_transfer",
+            "usd": 13440.53
+          },
+          {
+            "count": 5,
+            "example_reason": "reviewer: Credit labeled as transfer in, likely not operating revenue but a personal transfer.",
+            "reviewed": "not_average_monthly_revenue",
+            "truth": "none (personal)",
+            "usd": 9592.66
+          },
+          {
+            "count": 2,
+            "example_reason": "reviewer: Zelle transfer from a personal account, not business revenue.",
+            "reviewed": "not_average_monthly_revenue (personal)",
+            "truth": "none (personal)",
+            "usd": 4383.19
+          },
+          {
+            "count": 1,
+            "example_reason": "reviewer: Debit to Gusto Payroll likely a payroll service fee, not revenue or NSF fee.",
+            "reviewed": "auto_deposit",
+            "truth": "none",
+            "usd": 2698.07
+          },
+          {
+            "count": 3,
+            "example_reason": "reviewer: Transaction is a non-sufficient-funds fee indicated by bank_charges_nsf_fee flag.",
+            "reviewed": "nsf",
+            "truth": "high_risk_debt_settlement",
+            "usd": 1932.4
+          },
+          {
+            "count": 1,
+            "example_reason": "reviewer: Transaction flagged as NSF fee despite credit direction, likely a correction or reversal related to NSF charges.",
+            "reviewed": "nsf",
+            "truth": "none (personal)",
+            "usd": 1563.67
+          },
+          {
+            "count": 3,
+            "example_reason": "reviewer: Transaction is an NSF fee despite casino counterparty text.",
+            "reviewed": "nsf",
+            "truth": "high_risk_gambling",
+            "usd": 1441.08
+          },
+          {
+            "count": 2,
+            "example_reason": "reviewer: Transaction is a debit with bank charges flagged as NSF fee despite garnishment text, indicating NSF fee is more likely.",
+            "reviewed": "nsf",
+            "truth": "high_risk_garnishment",
+            "usd": 834.65
+          },
+          {
+            "count": 4,
+            "example_reason": "reviewer: Transaction flagged as NSF fee and description indicates repayment, consistent with NSF fee.",
+            "reviewed": "nsf",
+            "truth": "active_advance",
+            "usd": 745.0
+          },
+          {
+            "count": 1,
+            "example_reason": "reviewer: VENMO CASHOUT likely represents a transfer between the business's own accounts, not revenue.",
+            "reviewed": "internal_transfer",
+            "truth": "none",
+            "usd": 120.99
+          }
+        ],
+        "hard_negatives": {
+          "accepted": {
+            "count": 246,
+            "ids": [
+              "txn_biz_01_0006",
+              "txn_biz_01_0046",
+              "txn_biz_01_0051",
+              "txn_biz_01_0060",
+              "txn_biz_01_0061",
+              "txn_biz_01_0063",
+              "txn_biz_01_0072",
+              "txn_biz_01_0078",
+              "txn_biz_01_0111",
+              "txn_biz_01_0131",
+              "txn_biz_01_0138",
+              "txn_biz_01_0141",
+              "txn_biz_01_0159",
+              "txn_biz_01_0169",
+              "txn_biz_01_0173",
+              "txn_biz_01_0178",
+              "txn_biz_01_0190",
+              "txn_biz_01_0229",
+              "txn_biz_01_0242",
+              "txn_biz_01_0245",
+              "txn_biz_01_0252",
+              "txn_biz_01_0260",
+              "txn_biz_01_0271",
+              "txn_biz_02_0007",
+              "txn_biz_02_0026",
+              "txn_biz_02_0064",
+              "txn_biz_02_0081",
+              "txn_biz_02_0127",
+              "txn_biz_02_0141",
+              "txn_biz_03_0003",
+              "txn_biz_03_0006",
+              "txn_biz_03_0007",
+              "txn_biz_03_0009",
+              "txn_biz_03_0014",
+              "txn_biz_03_0020",
+              "txn_biz_03_0028",
+              "txn_biz_03_0029",
+              "txn_biz_03_0032",
+              "txn_biz_03_0033",
+              "txn_biz_03_0041",
+              "txn_biz_03_0044",
+              "txn_biz_03_0046",
+              "txn_biz_03_0053",
+              "txn_biz_03_0056",
+              "txn_biz_03_0061",
+              "txn_biz_03_0062",
+              "txn_biz_03_0068",
+              "txn_biz_03_0071",
+              "txn_biz_03_0076",
+              "txn_biz_03_0095",
+              "txn_biz_03_0099",
+              "txn_biz_03_0100",
+              "txn_biz_03_0107",
+              "txn_biz_03_0109",
+              "txn_biz_03_0111",
+              "txn_biz_03_0117",
+              "txn_biz_03_0118",
+              "txn_biz_03_0120",
+              "txn_biz_03_0121",
+              "txn_biz_03_0127",
+              "txn_biz_03_0130",
+              "txn_biz_03_0131",
+              "txn_biz_03_0133",
+              "txn_biz_03_0136",
+              "txn_biz_03_0139",
+              "txn_biz_03_0145",
+              "txn_biz_04_0001",
+              "txn_biz_04_0005",
+              "txn_biz_04_0014",
+              "txn_biz_04_0024",
+              "txn_biz_04_0028",
+              "txn_biz_04_0029",
+              "txn_biz_04_0033",
+              "txn_biz_04_0036",
+              "txn_biz_04_0047",
+              "txn_biz_04_0056",
+              "txn_biz_04_0073",
+              "txn_biz_04_0075",
+              "txn_biz_04_0085",
+              "txn_biz_04_0089",
+              "txn_biz_04_0097",
+              "txn_biz_04_0111",
+              "txn_biz_04_0136",
+              "txn_biz_04_0141",
+              "txn_biz_04_0144",
+              "txn_biz_04_0149",
+              "txn_biz_04_0156",
+              "txn_biz_04_0157",
+              "txn_biz_04_0159",
+              "txn_biz_04_0170",
+              "txn_biz_04_0186",
+              "txn_biz_04_0203",
+              "txn_biz_04_0204",
+              "txn_biz_04_0213",
+              "txn_biz_04_0216",
+              "txn_biz_04_0221",
+              "txn_biz_04_0224",
+              "txn_biz_04_0231",
+              "txn_biz_05_0005",
+              "txn_biz_05_0018",
+              "txn_biz_05_0019",
+              "txn_biz_05_0030",
+              "txn_biz_05_0031",
+              "txn_biz_05_0044",
+              "txn_biz_05_0045",
+              "txn_biz_05_0049",
+              "txn_biz_05_0093",
+              "txn_biz_05_0130",
+              "txn_biz_05_0143",
+              "txn_biz_05_0145",
+              "txn_biz_06_0001",
+              "txn_biz_06_0015",
+              "txn_biz_06_0033",
+              "txn_biz_06_0065",
+              "txn_biz_06_0067",
+              "txn_biz_06_0078",
+              "txn_biz_06_0081",
+              "txn_biz_06_0088",
+              "txn_biz_06_0114",
+              "txn_biz_06_0120",
+              "txn_biz_06_0141",
+              "txn_biz_06_0160",
+              "txn_biz_06_0186",
+              "txn_biz_07_0007",
+              "txn_biz_07_0027",
+              "txn_biz_07_0032",
+              "txn_biz_07_0048",
+              "txn_biz_07_0089",
+              "txn_biz_07_0101",
+              "txn_biz_07_0110",
+              "txn_biz_07_0128",
+              "txn_biz_07_0146",
+              "txn_biz_07_0166",
+              "txn_biz_07_0168",
+              "txn_biz_07_0171",
+              "txn_biz_07_0182",
+              "txn_biz_07_0183",
+              "txn_biz_07_0210",
+              "txn_biz_08_0002",
+              "txn_biz_08_0007",
+              "txn_biz_08_0019",
+              "txn_biz_08_0032",
+              "txn_biz_08_0036",
+              "txn_biz_08_0039",
+              "txn_biz_08_0040",
+              "txn_biz_08_0048",
+              "txn_biz_08_0059",
+              "txn_biz_08_0064",
+              "txn_biz_08_0066",
+              "txn_biz_08_0068",
+              "txn_biz_08_0074",
+              "txn_biz_08_0089",
+              "txn_biz_08_0097",
+              "txn_biz_08_0107",
+              "txn_biz_08_0110",
+              "txn_biz_08_0114",
+              "txn_biz_08_0120",
+              "txn_biz_08_0123",
+              "txn_biz_08_0127",
+              "txn_biz_08_0137",
+              "txn_biz_08_0141",
+              "txn_biz_08_0146",
+              "txn_biz_08_0148",
+              "txn_biz_08_0150",
+              "txn_biz_08_0153",
+              "txn_biz_08_0158",
+              "txn_biz_08_0164",
+              "txn_biz_08_0167",
+              "txn_biz_08_0175",
+              "txn_biz_08_0190",
+              "txn_biz_08_0194",
+              "txn_biz_08_0206",
+              "txn_biz_08_0209",
+              "txn_biz_08_0213",
+              "txn_biz_08_0217",
+              "txn_biz_08_0224",
+              "txn_biz_08_0227",
+              "txn_biz_08_0232",
+              "txn_biz_08_0237",
+              "txn_biz_08_0243",
+              "txn_biz_08_0249",
+              "txn_biz_08_0262",
+              "txn_biz_09_0001",
+              "txn_biz_09_0004",
+              "txn_biz_09_0008",
+              "txn_biz_09_0009",
+              "txn_biz_09_0015",
+              "txn_biz_09_0017",
+              "txn_biz_09_0021",
+              "txn_biz_09_0022",
+              "txn_biz_09_0025",
+              "txn_biz_09_0026",
+              "txn_biz_09_0029",
+              "txn_biz_09_0030",
+              "txn_biz_09_0034",
+              "txn_biz_09_0039",
+              "txn_biz_09_0042",
+              "txn_biz_09_0049",
+              "txn_biz_09_0059",
+              "txn_biz_09_0063",
+              "txn_biz_09_0064",
+              "txn_biz_09_0070",
+              "txn_biz_09_0072",
+              "txn_biz_09_0073",
+              "txn_biz_09_0079",
+              "txn_biz_09_0080",
+              "txn_biz_09_0088",
+              "txn_biz_09_0089",
+              "txn_biz_09_0092",
+              "txn_biz_09_0095",
+              "txn_biz_09_0096",
+              "txn_biz_09_0099",
+              "txn_biz_09_0101",
+              "txn_biz_09_0105",
+              "txn_biz_09_0107",
+              "txn_biz_09_0108",
+              "txn_biz_09_0112",
+              "txn_biz_09_0117",
+              "txn_biz_09_0120",
+              "txn_biz_09_0122",
+              "txn_biz_09_0125",
+              "txn_biz_09_0131",
+              "txn_biz_09_0133",
+              "txn_biz_09_0138",
+              "txn_biz_09_0141",
+              "txn_biz_09_0145",
+              "txn_biz_09_0147",
+              "txn_biz_09_0149",
+              "txn_biz_09_0152",
+              "txn_biz_09_0155",
+              "txn_biz_09_0157",
+              "txn_biz_09_0160",
+              "txn_biz_09_0161",
+              "txn_biz_10_0003",
+              "txn_biz_10_0025",
+              "txn_biz_10_0045",
+              "txn_biz_10_0050",
+              "txn_biz_10_0057",
+              "txn_biz_10_0069",
+              "txn_biz_10_0080",
+              "txn_biz_10_0100",
+              "txn_biz_10_0111",
+              "txn_biz_10_0117",
+              "txn_biz_10_0131",
+              "txn_biz_10_0136",
+              "txn_biz_10_0162"
+            ]
+          },
+          "accepted_share_of_reviewed": 0.3968,
+          "proposed": {
+            "count": 246,
+            "ids": [
+              "txn_biz_01_0006",
+              "txn_biz_01_0046",
+              "txn_biz_01_0051",
+              "txn_biz_01_0060",
+              "txn_biz_01_0061",
+              "txn_biz_01_0063",
+              "txn_biz_01_0072",
+              "txn_biz_01_0078",
+              "txn_biz_01_0111",
+              "txn_biz_01_0131",
+              "txn_biz_01_0138",
+              "txn_biz_01_0141",
+              "txn_biz_01_0159",
+              "txn_biz_01_0169",
+              "txn_biz_01_0173",
+              "txn_biz_01_0178",
+              "txn_biz_01_0190",
+              "txn_biz_01_0229",
+              "txn_biz_01_0242",
+              "txn_biz_01_0245",
+              "txn_biz_01_0252",
+              "txn_biz_01_0260",
+              "txn_biz_01_0271",
+              "txn_biz_02_0007",
+              "txn_biz_02_0026",
+              "txn_biz_02_0064",
+              "txn_biz_02_0081",
+              "txn_biz_02_0127",
+              "txn_biz_02_0141",
+              "txn_biz_03_0003",
+              "txn_biz_03_0006",
+              "txn_biz_03_0007",
+              "txn_biz_03_0009",
+              "txn_biz_03_0014",
+              "txn_biz_03_0020",
+              "txn_biz_03_0028",
+              "txn_biz_03_0029",
+              "txn_biz_03_0032",
+              "txn_biz_03_0033",
+              "txn_biz_03_0041",
+              "txn_biz_03_0044",
+              "txn_biz_03_0046",
+              "txn_biz_03_0053",
+              "txn_biz_03_0056",
+              "txn_biz_03_0061",
+              "txn_biz_03_0062",
+              "txn_biz_03_0068",
+              "txn_biz_03_0071",
+              "txn_biz_03_0076",
+              "txn_biz_03_0095",
+              "txn_biz_03_0099",
+              "txn_biz_03_0100",
+              "txn_biz_03_0107",
+              "txn_biz_03_0109",
+              "txn_biz_03_0111",
+              "txn_biz_03_0117",
+              "txn_biz_03_0118",
+              "txn_biz_03_0120",
+              "txn_biz_03_0121",
+              "txn_biz_03_0127",
+              "txn_biz_03_0130",
+              "txn_biz_03_0131",
+              "txn_biz_03_0133",
+              "txn_biz_03_0136",
+              "txn_biz_03_0139",
+              "txn_biz_03_0145",
+              "txn_biz_04_0001",
+              "txn_biz_04_0005",
+              "txn_biz_04_0014",
+              "txn_biz_04_0024",
+              "txn_biz_04_0028",
+              "txn_biz_04_0029",
+              "txn_biz_04_0033",
+              "txn_biz_04_0036",
+              "txn_biz_04_0047",
+              "txn_biz_04_0056",
+              "txn_biz_04_0073",
+              "txn_biz_04_0075",
+              "txn_biz_04_0085",
+              "txn_biz_04_0089",
+              "txn_biz_04_0097",
+              "txn_biz_04_0111",
+              "txn_biz_04_0136",
+              "txn_biz_04_0141",
+              "txn_biz_04_0144",
+              "txn_biz_04_0149",
+              "txn_biz_04_0156",
+              "txn_biz_04_0157",
+              "txn_biz_04_0159",
+              "txn_biz_04_0170",
+              "txn_biz_04_0186",
+              "txn_biz_04_0203",
+              "txn_biz_04_0204",
+              "txn_biz_04_0213",
+              "txn_biz_04_0216",
+              "txn_biz_04_0221",
+              "txn_biz_04_0224",
+              "txn_biz_04_0231",
+              "txn_biz_05_0005",
+              "txn_biz_05_0018",
+              "txn_biz_05_0019",
+              "txn_biz_05_0030",
+              "txn_biz_05_0031",
+              "txn_biz_05_0044",
+              "txn_biz_05_0045",
+              "txn_biz_05_0049",
+              "txn_biz_05_0093",
+              "txn_biz_05_0130",
+              "txn_biz_05_0143",
+              "txn_biz_05_0145",
+              "txn_biz_06_0001",
+              "txn_biz_06_0015",
+              "txn_biz_06_0033",
+              "txn_biz_06_0065",
+              "txn_biz_06_0067",
+              "txn_biz_06_0078",
+              "txn_biz_06_0081",
+              "txn_biz_06_0088",
+              "txn_biz_06_0114",
+              "txn_biz_06_0120",
+              "txn_biz_06_0141",
+              "txn_biz_06_0160",
+              "txn_biz_06_0186",
+              "txn_biz_07_0007",
+              "txn_biz_07_0027",
+              "txn_biz_07_0032",
+              "txn_biz_07_0048",
+              "txn_biz_07_0089",
+              "txn_biz_07_0101",
+              "txn_biz_07_0110",
+              "txn_biz_07_0128",
+              "txn_biz_07_0146",
+              "txn_biz_07_0166",
+              "txn_biz_07_0168",
+              "txn_biz_07_0171",
+              "txn_biz_07_0182",
+              "txn_biz_07_0183",
+              "txn_biz_07_0210",
+              "txn_biz_08_0002",
+              "txn_biz_08_0007",
+              "txn_biz_08_0019",
+              "txn_biz_08_0032",
+              "txn_biz_08_0036",
+              "txn_biz_08_0039",
+              "txn_biz_08_0040",
+              "txn_biz_08_0048",
+              "txn_biz_08_0059",
+              "txn_biz_08_0064",
+              "txn_biz_08_0066",
+              "txn_biz_08_0068",
+              "txn_biz_08_0074",
+              "txn_biz_08_0089",
+              "txn_biz_08_0097",
+              "txn_biz_08_0107",
+              "txn_biz_08_0110",
+              "txn_biz_08_0114",
+              "txn_biz_08_0120",
+              "txn_biz_08_0123",
+              "txn_biz_08_0127",
+              "txn_biz_08_0137",
+              "txn_biz_08_0141",
+              "txn_biz_08_0146",
+              "txn_biz_08_0148",
+              "txn_biz_08_0150",
+              "txn_biz_08_0153",
+              "txn_biz_08_0158",
+              "txn_biz_08_0164",
+              "txn_biz_08_0167",
+              "txn_biz_08_0175",
+              "txn_biz_08_0190",
+              "txn_biz_08_0194",
+              "txn_biz_08_0206",
+              "txn_biz_08_0209",
+              "txn_biz_08_0213",
+              "txn_biz_08_0217",
+              "txn_biz_08_0224",
+              "txn_biz_08_0227",
+              "txn_biz_08_0232",
+              "txn_biz_08_0237",
+              "txn_biz_08_0243",
+              "txn_biz_08_0249",
+              "txn_biz_08_0262",
+              "txn_biz_09_0001",
+              "txn_biz_09_0004",
+              "txn_biz_09_0008",
+              "txn_biz_09_0009",
+              "txn_biz_09_0015",
+              "txn_biz_09_0017",
+              "txn_biz_09_0021",
+              "txn_biz_09_0022",
+              "txn_biz_09_0025",
+              "txn_biz_09_0026",
+              "txn_biz_09_0029",
+              "txn_biz_09_0030",
+              "txn_biz_09_0034",
+              "txn_biz_09_0039",
+              "txn_biz_09_0042",
+              "txn_biz_09_0049",
+              "txn_biz_09_0059",
+              "txn_biz_09_0063",
+              "txn_biz_09_0064",
+              "txn_biz_09_0070",
+              "txn_biz_09_0072",
+              "txn_biz_09_0073",
+              "txn_biz_09_0079",
+              "txn_biz_09_0080",
+              "txn_biz_09_0088",
+              "txn_biz_09_0089",
+              "txn_biz_09_0092",
+              "txn_biz_09_0095",
+              "txn_biz_09_0096",
+              "txn_biz_09_0099",
+              "txn_biz_09_0101",
+              "txn_biz_09_0105",
+              "txn_biz_09_0107",
+              "txn_biz_09_0108",
+              "txn_biz_09_0112",
+              "txn_biz_09_0117",
+              "txn_biz_09_0120",
+              "txn_biz_09_0122",
+              "txn_biz_09_0125",
+              "txn_biz_09_0131",
+              "txn_biz_09_0133",
+              "txn_biz_09_0138",
+              "txn_biz_09_0141",
+              "txn_biz_09_0145",
+              "txn_biz_09_0147",
+              "txn_biz_09_0149",
+              "txn_biz_09_0152",
+              "txn_biz_09_0155",
+              "txn_biz_09_0157",
+              "txn_biz_09_0160",
+              "txn_biz_09_0161",
+              "txn_biz_10_0003",
+              "txn_biz_10_0025",
+              "txn_biz_10_0045",
+              "txn_biz_10_0050",
+              "txn_biz_10_0057",
+              "txn_biz_10_0069",
+              "txn_biz_10_0080",
+              "txn_biz_10_0100",
+              "txn_biz_10_0111",
+              "txn_biz_10_0117",
+              "txn_biz_10_0131",
+              "txn_biz_10_0136",
+              "txn_biz_10_0162"
+            ]
+          }
+        }
+      },
+      "secondary": {
+        "accuracy": {
+          "audit": {
+            "legacy": {
+              "business": 1.0,
+              "group": 1.0,
+              "revenue": 1.0
+            },
+            "n": 74,
+            "reviewed": {
+              "business": 1.0,
+              "group": 0.3649,
+              "revenue": 0.8919
+            }
+          },
+          "flagged": {
+            "legacy": {
+              "business": 0.9853,
+              "group": 0.5495,
+              "revenue": 0.815
+            },
+            "n": 546,
+            "reviewed": {
+              "business": 0.989,
+              "group": 0.5549,
+              "revenue": 0.7271
+            }
+          }
+        }
+      },
+      "status_counts": {
+        "confirmed": 141,
+        "corrected": 479
+      }
+    }
+  }
+}
