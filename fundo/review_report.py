@@ -189,17 +189,19 @@ def write(path, doc):
         f.write(json.dumps(doc, sort_keys=True, indent=2) + "\n")
 
 
-def _load(data_dir):
-    d = Path(data_dir)
+def _load(data_dir, inputs_dir=None):
+    """Generated data from data_dir; frozen inputs (cache, adversarial set) from inputs_dir."""
+    d, fixed = Path(data_dir), Path(inputs_dir or data_dir)
     load = lambda name: json.loads((d / name).read_text())
     txns = load("transactions.json")
-    return (d, load("businesses.json"), txns, load("ground_truth.json"),
-            load("adversarial.json")["items"], classify_all(txns))
+    items = json.loads((fixed / "adversarial.json").read_text())["items"]
+    return (fixed / "llm_cache.jsonl", d, load("businesses.json"), txns, load("ground_truth.json"),
+            items, classify_all(txns))
 
 
 def _passes(inputs, complete):
     """Every review pass: both variants over flagged + audit, then the adversarial set."""
-    _, businesses, txns, _, items, legacy = inputs
+    _, _, businesses, txns, _, items, legacy = inputs
     out = {}
     for name, use_pfc in VARIANTS:
         flagged = flag(txns, legacy, use_pfc)
@@ -212,10 +214,10 @@ def _passes(inputs, complete):
     return out
 
 
-def preflight(data_dir="data"):
+def preflight(data_dir="data", inputs_dir=None):
     """Count attempt-0 cache misses per variant without calling the API (retries add more)."""
-    inputs = _load(data_dir)
-    cache = llm.load_cache(inputs[0] / "llm_cache.jsonl")
+    inputs = _load(data_dir, inputs_dir)
+    cache = llm.load_cache(inputs[0])
     misses = Counter()
 
     def dry(request):
@@ -230,11 +232,10 @@ def preflight(data_dir="data"):
     return {v: misses[v] for v in ("pfc", "no_pfc", "adv_pfc", "adv_no_pfc")}
 
 
-def run(data_dir="data", api_key=None, refresh=False, call=None):
+def run(data_dir="data", api_key=None, refresh=False, call=None, inputs_dir=None):
     """Review from the committed cache (calling the API only on misses with a key) and write outputs."""
-    inputs = _load(data_dir)
-    d, businesses, txns, truth, _, legacy = inputs
-    path = d / "llm_cache.jsonl"
+    inputs = _load(data_dir, inputs_dir)
+    path, d, businesses, txns, truth, _, legacy = inputs
     cache = llm.load_cache(path)
     res = _passes(inputs, lambda r: llm.complete(cache, path, r, api_key, refresh, call))
 

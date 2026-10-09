@@ -99,15 +99,15 @@ Dependency graph: P1 -> P2 -> P3 -> P5 -> P6 -> P7 -> P8. P4 (sensitivity) depen
 
 ## Phase 8: CLI, snapshots, verification, README  | commit: `feat(cli): wire review and sensitivity into all; add snapshots and docs`
 
-- [ ] 8.1 RED: `tests/test_cli_review.py` - `review`, `sensitivity` standalone; `review --refresh` requires a key (error otherwise); cache miss without key exits 3 and prints the miss count; API failure after retries exits 1; usage error stays argparse exit 2. (RC: Missing entries; BR: Cache incomplete)
-- [ ] 8.2 RED: `all` = generate -> baseline -> review (cache) -> sensitivity; with no key into a tmp dir produces `baseline_report.json`, `reviewed_labels.json`, `review_report.json`, `sensitivity.json` byte-equal to committed files, twice in a row; `baseline_report.json` equals its Phase 1 content. (BR: One command, deterministic, offline)
-- [ ] 8.3 RED: `all` with a copy of the cache missing entries and no key exits nonzero (3) with the miss count. (BR: Cache incomplete)
-- [ ] 8.4 Snapshot tests of committed outputs (hash or full-content compare) for the three new files and the Phase 1 outputs.
-- [ ] 8.5 Measured-behavior tests (no xfail): assert structural invariants of the real committed report (status counts partition, four statuses sum, 10 businesses each with truth/legacy/reviewed, `needs_human_review` consistent with 0.40, Wilson upper bound > 0 when 0 errors, flag coverage labeled optimistic) and that `reviewer_hypotheses.evaluate` output is recorded in the report; do NOT assert that hypotheses pass.
-- [ ] 8.6 GREEN: modify `fundo/cli.py` only (commands, `--refresh`, extended `all`, exit codes 0/1/3).
-- [ ] 8.7 README "Running" section: `python -m fundo all` works offline from the committed cache and needs no key; `--refresh` forces live calls (requires `OPENAI_API_KEY`, appends to the cache); exit codes; how prompt/rule version bumps require refill; spend note; optimistic-coverage caveat.
+- [x] 8.1 RED: `tests/test_cli_review.py` - `review`, `sensitivity` standalone; `review --refresh` requires a key (error otherwise); cache miss without key exits 3 and prints the miss count; API failure after retries exits 1; usage error stays argparse exit 2. (RC: Missing entries; BR: Cache incomplete)
+- [x] 8.2 RED: `all` = generate -> baseline -> review (cache) -> sensitivity; with no key into a tmp dir produces `baseline_report.json`, `reviewed_labels.json`, `review_report.json`, `sensitivity.json` byte-equal to committed files, twice in a row; `baseline_report.json` equals its Phase 1 content. (BR: One command, deterministic, offline)
+- [x] 8.3 RED: `all` with a copy of the cache missing entries and no key exits nonzero (3) with the miss count. (BR: Cache incomplete)
+- [x] 8.4 Snapshot tests of committed outputs (hash or full-content compare) for the three new files and the Phase 1 outputs.
+- [x] 8.5 Measured-behavior tests (no xfail): assert structural invariants of the real committed report (status counts partition, four statuses sum, 10 businesses each with truth/legacy/reviewed, `needs_human_review` consistent with 0.40, Wilson upper bound > 0 when 0 errors, flag coverage labeled optimistic) and that `reviewer_hypotheses.evaluate` output is recorded in the report; do NOT assert that hypotheses pass.
+- [x] 8.6 GREEN: modify `fundo/cli.py` only (commands, `--refresh`, extended `all`, exit codes 0/1/3).
+- [x] 8.7 README "Running" section: `python -m fundo all` works offline from the committed cache and needs no key; `--refresh` forces live calls (requires `OPENAI_API_KEY`, appends to the cache); exit codes; how prompt/rule version bumps require refill; spend note; optimistic-coverage caveat.
 - [ ] 8.8 Clean-clone verification: clone the repo into a scratch dir, create a fresh venv without extra installs, unset `OPENAI_API_KEY`, run `python -m fundo all` twice and `.venv/bin/python -m pytest`; diff outputs against committed (must be empty).
-- [ ] 8.9 Full suite green; commit.
+- [x] 8.9 Full suite green; commit.
 
 ---
 

@@ -4,7 +4,7 @@ LLM-based reviewer that validates labels produced by a legacy keyword transactio
 
 Built for the [Fundo AI Engineer Take-Home Challenge](https://fundo-llc.github.io/fundo-take-home/ai-engineer-challenge/).
 
-> Status: work in progress. Phase 1 (synthetic data, legacy engine, credit features and baseline report) is complete.
+> Status: Parts 1 and 2 are complete (data baseline, LLM reviewer evaluated as version r2, credit sensitivity). Part 3 (production strategy) and SOLUTION.md are next.
 
 ## Context
 
@@ -92,36 +92,41 @@ Synthetic only — no real customer data.
 
 ## Running
 
-Requires Python 3.11+. The package uses only the standard library, so running it needs no install, virtualenv or API key. Run every command from the repository root.
+Requires Python 3.11+. The package uses only the standard library: running it needs no install, no virtualenv and **no API key**. Run every command from the repository root.
 
-### Baseline: data, legacy engine and report
+### Reproduce everything (offline, from the committed cache)
 
 ```bash
 python3 -m fundo all
 ```
 
-This regenerates the synthetic data (seed 42), labels it with the legacy keyword engine, and writes the legacy-vs-truth report to `data/`:
+`all` runs generate → baseline report → LLM review (from `data/llm_cache.jsonl`) → credit sensitivity, and rewrites every output in `data/` byte for byte. `git status` stays clean afterwards.
 
 | File | Content |
 |---|---|
-| `data/businesses.json` | 10 synthetic businesses |
-| `data/transactions.json` | ~2,000 Plaid-format transactions |
-| `data/ground_truth.json` | Correct label per transaction |
-| `data/traps.json` | Which transactions are planted traps |
-| `data/legacy_labels.json` | Legacy keyword engine labels |
-| `data/baseline_report.json` | Per-business features, offers, planned vs unplanned mislabels, and hypothesis results |
+| `data/businesses.json`, `transactions.json`, `ground_truth.json`, `traps.json` | Synthetic data (seed 42): 10 businesses, 2,000 Plaid-format transactions, truth labels, planted traps |
+| `data/legacy_labels.json`, `baseline_report.json` | Legacy keyword engine labels and the legacy-vs-truth report |
+| `data/llm_cache.jsonl` | Every raw model response (r1 and r2), keyed by model, prompt version, payload and attempt |
+| `data/adversarial.json` | Frozen prompt-injection test set (outside the business data) |
+| `data/reviewed_labels.json`, `review_report.json` | Final reviewer labels and evaluation (version r2) |
+| `data/runs/r1_*.json` | The first, failed reviewer run, preserved for comparison |
+| `data/sensitivity.json` | Mislabel Monte Carlo (2/5/10%), NSF observability, 61-day truncation |
 
-All outputs are committed. A run with the default seed reproduces them byte for byte, so `git status` stays clean afterwards.
+Single steps: `python3 -m fundo generate | report | review | sensitivity`. Generated files go to `--out` (default `data`); the frozen inputs (cache and adversarial set) are read from `--inputs` (default: this repository's `data/`).
 
-Other subcommands and options:
+### Regenerate the LLM cache (needs a key, costs money)
 
 ```bash
-python3 -m fundo generate          # data only
-python3 -m fundo report            # legacy labels + report from existing data
-python3 -m fundo all --seed 7 --out /tmp/fundo   # different seed, separate folder
+export OPENAI_API_KEY=sk-...
+python3 -m fundo review            # calls the API only for cache misses
+python3 -m fundo review --refresh  # re-calls every request and appends to the cache
 ```
 
-Amounts follow the Fundo PDF sign convention: credits are positive and debits negative, the reverse of native Plaid.
+Before any live call the command prints the number of calls and a projected spend, and aborts above $10. Each response is written and fsynced to the cache before it is used, so an interrupted run resumes where it stopped. A full run is 1,205 calls with `gpt-4.1-mini` (~$0.35, ~20 minutes); the committed cache holds two runs and cost $0.70 in total.
+
+Changing the prompt, payload or flag rules requires bumping `PROMPT_VERSION` / `FLAG_RULES_VERSION` (pinned by `tests/test_freeze.py`), which changes the cache keys and requires a refill.
+
+Exit codes: `0` ok, `1` API failure or budget abort, `2` usage error, `3` cache miss without `OPENAI_API_KEY`.
 
 ### Tests
 
@@ -131,12 +136,48 @@ python3 -m venv .venv
 .venv/bin/python -m pytest
 ```
 
-### LLM reviewer
+No test touches the network.
 
-Not implemented yet (Phase 2). The commands to run it from the committed cache and to regenerate the cache will be added here.
+## Results
+
+Predictions were committed before each measurement and are kept verbatim; failures are recorded, not tuned away. Full detail: `openspec/changes/reviewer-credit-impact/proposal.md` (hypothesis change log).
+
+### Reviewer: r1 vs r2 (same 7 frozen hypotheses)
+
+| | Hypothesis | r1 | r2 |
+|---|---|---|---|
+| R1 | Undoes the biz_08 false decline | FAILED | PASSED |
+| R2 | Fixes biz_09's NSF count | FAILED | PASSED |
+| R3 | Cuts revenue $ error at least in half | FAILED | FAILED (−33%) |
+| R4 | Lowers total offer error | FAILED | FAILED (worse) |
+| R5 | Gate rejects most proposed hard negatives | FAILED | FAILED (106/110 accepted) |
+| R6 | Resists injections (≤ 2 of 12 obeyed) | PASSED | FAILED (3 of 12) |
+| R8 | Invalid output is rare | PASSED | PASSED |
+
+| Outcome (primary variant) | Legacy | r1 | r2 |
+|---|---|---|---|
+| Correct approve/decline decisions | 9 / 10 | 2 / 10 | **10 / 10** |
+| Revenue $ misclassified | $166,457 | $222,565 | $110,649 |
+| High-risk $ misclassified | $3,926 | $4,208 | **$0** |
+| Group accuracy on flagged set (secondary) | 0.55 | 0.55 | 0.81 |
+
+- **r1 failed because of a payload design bug in this project.** The per-transaction payload carried the business-level field `bank_charges_nsf_fee: true`, which the model read as evidence that a transaction was an NSF charge. biz_02, the only business with that field false, got 0 wrong NSF proposals; the other nine got 205.
+- **r2 changed only that.** The field was removed and `PROMPT_VERSION` bumped. Thresholds, flag rules, schema, gate, system prompt and hypotheses are identical.
+- **Remaining failures in r2:**
+  - **`active_advance` over-labeling.** Ordinary financing debits (a truck lease, auto-loan payments) were labeled as funder repayments. The offer subtracts 20 × daily funder payments, so one $3,100 lease payment removed $62,000 from biz_03's offer. This drives R4.
+  - **Self-reported confidence does not discriminate.** 607 of 620 answers report ≥ 0.9, so the confidence gate accepts nearly every proposed correction, including 106 of 110 hard negatives. This drives R5 and holds in both runs.
+  - **Prompt injection.** 3 of 12 injected instructions were obeyed with `personal_finance_category` (4 of 12 without), including a casino debit described as office supplies and an owner's personal credit claimed as business income.
+
+`personal_finance_category` ablation (descriptive, shared 560 transactions): group accuracy 0.823 with and without it; revenue $ error lower with it ($100,873 vs $120,585).
+
+Flag coverage of legacy errors is 100% on this dataset, but it is an **optimistic upper bound**: the flag rules were written with knowledge of the planted scenarios. The independent estimate is the 5% random audit: 0 legacy errors in 74 sampled transactions, Wilson 95% upper bound 4.9%.
+
+### Credit sensitivity (Part 2)
+
+S1–S3 passed and S4 failed: 6 of 8 approved businesses lose ≥ 1% of their offer when truncated to 61 days (no approve → decline flips). biz_09 flips from decline to approve at 61 days because its earlier NSF events fall outside the window: a short history can hide stress signals, not only revenue. For banks without NSF fees (biz_02), zero NSF is reported as unobserved (`nsf_observable: false`), with overdrafts as the proxy. The offer formula is never changed.
 
 ## Deliverables
 
-- [ ] Code that runs from a clean checkout and reproduces output from cache
-- [ ] `README.md` with copy-paste run and cache-regeneration commands
+- [x] Code that runs from a clean checkout and reproduces output from cache
+- [x] `README.md` with copy-paste run and cache-regeneration commands
 - [ ] `SOLUTION.md` (2–3 pages): approach, results, model/prompt choices, code vs. model boundary, Part 2 answers, Part 3 plan, AI tooling disclosure
