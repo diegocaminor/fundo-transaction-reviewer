@@ -87,14 +87,14 @@ Dependency graph: P1 -> P2 -> P3 -> P5 -> P6 -> P7 -> P8. P4 (sensitivity) depen
 
 ## Phase 7: Cache fill (real API)  | commit: `data(llm-cache): add committed reviewer cache and review outputs`
 
-- [ ] 7.0 **[USER ACTION]** Export `OPENAI_API_KEY` in the shell session yourself (never paste it in chat or commit it). Confirm the working tree is clean at the Phase 6 freeze commit.
+- [x] 7.0 **[USER ACTION]** Export `OPENAI_API_KEY` in the shell session yourself (never paste it in chat or commit it). Confirm the working tree is clean at the Phase 6 freeze commit.
 - [x] 7.1 Dry preflight with the key set: print the count of attempt-0 requests for `pfc`, `no_pfc`, `adv_pfc`, `adv_no_pfc` and the pre-run spend projection; abort if projected > $10.
-- [ ] 7.2 Run `python -m fundo review` live (both variants + adversarial). Interrupt-safe because every response is flushed before use; re-running resumes from the cache.
-- [ ] 7.3 Inspect `data/llm_cache.jsonl`: every record's `system_prompt_sha`/`prompt_version` equals current; confirm `estimate_spend` < $10 from cached usage; no secrets in the file.
-- [ ] 7.4 Re-run WITHOUT the key (`env -u OPENAI_API_KEY`): succeeds with no network and writes `reviewed_labels.json`, `review_report.json` byte-identical to the keyed run; confirm via file hashes.
-- [ ] 7.5 Add tests: spend < $10 asserted on the committed cache; all records' `system_prompt_sha` match current; every required key present (preflight miss count = 0). (RC: Budget; Offline run)
-- [ ] 7.6 Verify the freeze commit is an ancestor of this commit; review the hypotheses outcomes recorded in the report (pass or fail, no edits to predictions).
-- [ ] 7.7 Full suite green; commit `data/llm_cache.jsonl`, `data/reviewed_labels.json`, `data/review_report.json`.
+- [x] 7.2 Run `python -m fundo review` live (both variants + adversarial). Interrupt-safe because every response is flushed before use; re-running resumes from the cache.
+- [x] 7.3 Inspect `data/llm_cache.jsonl`: every record's `system_prompt_sha`/`prompt_version` equals current; confirm `estimate_spend` < $10 from cached usage; no secrets in the file.
+- [x] 7.4 Re-run WITHOUT the key (`env -u OPENAI_API_KEY`): succeeds with no network and writes `reviewed_labels.json`, `review_report.json` byte-identical to the keyed run; confirm via file hashes.
+- [x] 7.5 Add tests: spend < $10 asserted on the committed cache; all records' `system_prompt_sha` match current; every required key present (preflight miss count = 0). (RC: Budget; Offline run)
+- [x] 7.6 Verify the freeze commit is an ancestor of this commit; review the hypotheses outcomes recorded in the report (pass or fail, no edits to predictions).
+- [x] 7.7 Full suite green; commit `data/llm_cache.jsonl`, `data/reviewed_labels.json`, `data/review_report.json`.
 - A prompt/rule edit after this point requires bumping `PROMPT_VERSION`/`FLAG_RULES_VERSION` and a new refill (documented in README).
 
 ## Phase 8: CLI, snapshots, verification, README  | commit: `feat(cli): wire review and sensitivity into all; add snapshots and docs`
