@@ -1,28 +1,22 @@
 # Solution
 
-Every number below is **measured** from committed artifacts (`data/*.json`, `data/runs/`, change logs in `openspec/changes/archive/`) unless marked as an *assumption* or *estimate*; `tests/test_docs_numbers.py` recomputes each one. Everything reproduces offline with `python3 -m fundo all`.
+Every number is **measured** from committed artifacts unless marked as an *estimate*; `tests/test_docs_numbers.py` recomputes each one. Everything reproduces offline with `python3 -m fundo all`.
 
 ## 1. How each part was solved
 
-**Data and baseline (prerequisite).** A seeded generator produces 10 Plaid-format businesses (2,000 transactions, 90 days; one with 61 days) with ground truth and a list of planted traps. The legacy keyword engine is ours (the challenge provides none): 13 ordered substring rules, no normalization, frozen before any data existed. It mislabels 254 of 2,000 transactions (12.7%). One bug was found rather than designed: the rule `nsf` matches inside "tra**nsf**er", so every savings sweep becomes an NSF and biz_08's daily Stripe payouts turn a healthy business into a decline.
+**Data and baseline.** A seeded generator builds 10 Plaid-format businesses (2,000 transactions, 90 days; one with 61) with ground truth and a list of planted traps. The legacy keyword engine is ours (the challenge provides none): 13 ordered substring rules, frozen before any data existed. It mislabels 254 of 2,000 transactions (12.7%). One bug was found, not designed: `nsf` matches inside "tra**nsf**er", so savings sweeps become NSFs.
 
-**Part 1, reviewer.** Code-only rules flag 546 suspicious transactions (27%) and a seeded 5% random audit adds 74. `gpt-4.1-mini` reviews each one in a separate call and returns only `group`, `business`, `confidence` and `reason` under a strict JSON schema. A deterministic gate decides whether to accept a correction (section 4). Raw responses are committed as a cache.
+**Part 1.** Code-only rules flag 546 suspicious transactions (27%) and a seeded 5% random audit adds 74. `gpt-4.1-mini` reviews each in its own call and returns only `group`, `business`, `confidence` and `reason` under a strict JSON schema. A deterministic gate decides what to accept (section 4). Raw responses are committed as a cache.
 
-**Part 2, credit impact.** Features and the offer are computed under truth, legacy and reviewed labels with the same functions. A Monte Carlo corrupts truth labels at 2/5/10% (200 seeded runs per rate) under two models: realistic confusions, including business/personal flips, and uniform random swaps. A truncation experiment cuts each 90-day business to its last 61 days.
+**Part 2.** Features and offer are computed under truth, legacy and reviewed labels with the same functions. A Monte Carlo corrupts truth labels at 2, 5 and 10% (200 seeded runs each), with realistic confusions (including business/personal flips) and with uniform swaps. **Part 3** is section 8.
 
-**Part 3** is the one-page production strategy in section 8.
-
-**Skipped, and why.** No few-shot examples or prompt iteration beyond one bug fix, to avoid fitting the prompt to our own synthetic traps. No confidence calibration, which needs labeled production data.
-
-**Method.** Every prediction was committed before its measurement and kept verbatim. Failures are reported as results; data, rules and thresholds were never adjusted to pass.
+**Skipped:** few-shot examples and prompt iteration beyond one bug fix (to avoid fitting our own traps), and confidence calibration (needs labeled production data). Every prediction was committed before its measurement; failures are results, never tuned away.
 
 ## 2. Results
 
-**Legacy baseline (6 of 10 predictions passed).** Most legacy errors push offers *up* (biz_04 +$22,200, +52%). biz_08 is a false decline (truth $39,230, legacy $0). In biz_09 two bugs cancel: the punctuation miss alone would approve $67,479 on a decline, and two phantom NSFs from the substring bug restore it. Legacy is right for the wrong reason.
+**Legacy baseline (6 of 10 predictions passed).** Most legacy errors push offers *up* (biz_04 +$22,200, +52%). biz_08 is a false decline (truth $39,230, legacy $0). In biz_09 two bugs cancel: the punctuation miss alone would approve $67,479 on a decline, and phantom NSFs restore it.
 
-**Reviewer, r1 vs r2** (same 7 predictions; primary variant with the Plaid category):
-
-| Prediction | r1 | r2 | r2 measured |
+| Prediction (reviewer) | r1 | r2 | r2 measured |
 |---|---|---|---|
 | R1 Undo biz_08 false decline | FAILED | PASSED | approve |
 | R2 Fix biz_09 NSF count | FAILED | PASSED | 6 (truth 6, legacy 7) |
@@ -38,45 +32,44 @@ Every number below is **measured** from committed artifacts (`data/*.json`, `dat
 | High-risk $ misclassified | $3,926 | $4,208 | **$0** |
 | Group accuracy, flagged set | 0.55 | 0.55 | 0.81 |
 
-Accuracy is secondary: the goal is the credit decision and dollar error. Per-business before/after revenue share, NSF and overdraft counts, high-risk debit share and offer (truth, legacy, reviewed) are in `data/review_report.json`.
+Per-business before/after revenue share, NSF/overdraft counts, high-risk share and offer are in `data/review_report.json`.
 
-**Sensitivity (3 of 4 predictions passed).** Realistic mislabels lower the mean offer by $938, $2,440 and $5,926 at 2, 5 and 10%. biz_09, at 6 NSF against a > 5 limit, is the only business whose decision flips at 2% (8% of runs). Random swaps flip decisions more often than realistic confusions (4.2% vs 1.9% of runs), mostly through implausible funder labels. S4 failed: 6 of 8 approved businesses lose ≥ 1% of their offer at 61 days.
+**Sensitivity (3 of 4 predictions passed).** Realistic mislabels lower the mean offer by $938, $2,440 and $5,926 at 2, 5 and 10%. Only biz_09 (6 NSF, limit > 5) flips at 2% (8% of runs). Uniform swaps flip decisions more often (4.2% vs 1.9% of runs).
 
-**Flag coverage.** 100% of legacy errors were flagged, but this is an **optimistic upper bound**: the rules were written knowing the planted scenarios. The independent estimate is the audit: 0 errors in 74 sampled transactions, Wilson 95% upper bound 4.9%, i.e. up to ~72 misses among the 1,454 unflagged.
+**Coverage.** 100% of legacy errors were flagged, an **optimistic upper bound** because the rules were written knowing the traps. The independent audit found 0 errors in 74 sampled transactions, Wilson 95% upper bound 4.9%: up to ~72 misses among the 1,454 unflagged.
 
-**Estimates and assumptions, not measurements.** The 0.70/0.85 confidence bars, the 1% materiality threshold and every prediction threshold are design choices fixed before running, not challenge requirements. Spend comes from token counts in the cache priced at the published `gpt-4.1-mini` rates: $0.70 for both runs. The synthetic data reflects our assumptions about bank descriptions, so absolute rates will not transfer to production.
+***Estimates and choices, not measurements:*** the 0.70/0.85 bars, the 1% materiality and every prediction threshold were fixed before running. Spend ($0.70 for both runs) prices cached token counts at published rates. Rates describe our synthetic data, not production.
 
-## 3. Model and prompt choices, and the failed attempt
+## 3. Which mislabels matter for credit
 
-`gpt-4.1-mini`: cheap, non-reasoning, strict JSON schemas, temperature 0. One transaction per call keeps cache keys simple and stops one injected description from influencing others. The client uses only the standard library, so running needs no install. Descriptions are wrapped in `<<<UNTRUSTED>>>` markers and declared data, never instructions.
+The offer is `1.2 × monthly revenue − 20 × daily funder payment`, zero above 5 NSFs. Derived from that formula for a 90-day history (checked in tests):
 
-**r1 failed (5 of 7 predictions) because of our payload, not only the model.** The per-transaction payload included the business-level field `bank_charges_nsf_fee: true`. The model read it as evidence that each transaction was an NSF charge and declined 8 of 10 healthy businesses. The proof came before any r2 call: biz_02, the only business with the field false, got 0 wrong NSF proposals, while the other nine got 205, and 185 of those reasons mention "bank charges" or "NSF fee".
+| Mislabel | Offer effect | Direction |
+|---|---|---|
+| $1 credit wrongly counted as revenue | **+$0.40** | over-lends |
+| $1 debit wrongly counted as funder payment, no other funder | **−$20** | false decline or cut |
+| One extra NSF | $0, then **−100%** past 5 | cliff |
+| High-risk or overdraft errors | **$0** (unpriced) | hidden risk |
 
-**r2 changed only that field** and the prompt version. Thresholds, rules, schema, gate, system prompt and predictions are identical, and r1 is kept next to r2. The prompt does **not** mention the "transfer → NSF" bug: that would coach the model on our own synthetic failure mode.
+A dollar of false funder debt weighs 50 times a dollar of false revenue, which is why one $3,100 lease payment removed $62,000 from biz_03. The term is fragile both ways: because it averages payment days, a small false funder debit added to a business that already pays more per day lowers the average and *raises* the offer. Legacy errors mostly over-lend; the reviewer's residual error under-lends.
 
-## 4. Code vs model boundary
+## 4. Model, prompt and the failed attempt
 
-The model **proposes**: group, business/personal, confidence and reason. Code **decides and computes** everything financial:
+`gpt-4.1-mini` (cheap, strict JSON schema, temperature 0), one transaction per call so injected text stays isolated. Descriptions are wrapped in `<<<UNTRUSTED>>>` markers and declared data, never instructions.
 
-- Revenue is always recomputed from group and business; the model cannot set it.
-- Features, offer and the NSF > 5 rule use the same functions for truth, legacy and reviewed labels.
-- **The gate measures credit impact, not field changes.** Each correction is applied alone to the original legacy labels and the offer is recomputed. If it flips the decision, moves the offer by ≥ 1%, or changes NSF, overdraft or high-risk share, it needs confidence ≥ 0.85; otherwise 0.70. Judging against the original labels makes the result independent of review order (tested).
-- Invalid or refused output gets one retry, then keeps the legacy label as `review_failed`.
+**r1 failed because of our payload.** It carried the business-level field `bank_charges_nsf_fee: true`, which the model read as evidence that each transaction was an NSF charge, so it declined 8 of 10 healthy businesses. Proof, before any r2 call: biz_02, the only business with the field false, got 0 wrong NSF proposals, while the other nine got 205, and 185 of those reasons cited "bank charges" or "NSF fee". **r2 removed only that field**; thresholds, rules, schema, gate, prompt and predictions are identical, and r1 is kept. The prompt does **not** mention the "transfer → NSF" bug: that would coach the model on our own synthetic failure.
 
-The model judges meaning; arithmetic, thresholds and authority stay auditable.
+## 5. Code vs model boundary
 
-## 5. Part 2 answers
+The model proposes group, business/personal, confidence and reason. Code recomputes revenue, features, offer and the NSF rule with the same functions for every label set. The gate applies each correction alone to the original legacy labels: if it flips the decision, moves the offer ≥ 1%, or changes NSF, overdraft or high-risk share, it needs confidence ≥ 0.85, otherwise 0.70 (order-independent, tested). Invalid output gets one retry, then keeps the legacy label as `review_failed`. The model judges meaning; arithmetic and authority stay auditable.
 
-**Zero NSF at a bank that charges no NSF fees** is *unobserved*, not clean: biz_02 has 0 NSF lines but 7 items paid into overdraft. We report `nsf_observable: false`, use overdrafts as the proxy and route the file to manual review, without changing the formula. Reading that zero as clean rewards exactly the accounts the threshold targets.
+## 6. Part 2 answers and limitations
 
-**61-day histories on a model built for 90 days.** Normalizing monthly revenue by `history_days / 30` fixes scale, not evidence. Cutting each 90-day business to 61 days lowered 6 of 8 approved offers by ≥ 1%, driven by infrequent deposits (biz_10 lost 35% of monthly revenue when its two largest deposits fell outside the window). Worse, **biz_09 flips from decline to approve** ($66,970) because its older NSFs drop out. A short history hides stress signals, so it should carry a low-history flag and a reviewed or reduced offer.
+**Zero NSF at a no-fee bank** is *unobserved*, not clean: biz_02 has 0 NSF lines but 7 items paid into overdraft. We report `nsf_observable: false`, use overdrafts as the proxy and route the file to review, without changing the formula.
 
-## 6. Limitations
+**61-day histories.** Dividing by `history_days / 30` fixes scale, not evidence. Truncating each 90-day business lowered 6 of 8 approved offers by ≥ 1% (biz_10 lost 35% of monthly revenue when two large deposits fell outside the window), and **biz_09 flips from decline to approve** ($66,970) because its older NSFs drop out. Short histories hide stress signals and need a reviewed offer.
 
-- **Funder over-labeling.** The model labels ordinary financing debits (a truck lease, auto-loan payments) as `active_advance`. The formula subtracts 20 × daily funder payments, so one $3,100 lease payment removed $62,000 from biz_03's offer. This is the main reason total offer error rose.
-- **Uncalibrated confidence.** 616 of 620 answers report ≥ 0.9, so the gate kept only 4 proposals and accepted 106 of 110 hard negatives. Self-reported confidence cannot be the filter; it needs calibration against labeled outcomes or a second signal.
-- **Injection resistance is imperfect.** 3 of 12 injected instructions were obeyed (4 of 12 without the Plaid category), including a casino debit described as office supplies and an owner's personal credit claimed as business income.
-- **Synthetic validity.** We wrote the traps, the legacy rules and the flag rules, and our Plaid category is derived from truth with 8% noise. With and without that field, accuracy on the 560 shared transactions was 0.823, but every rate here describes our own data.
+**Limitations.** Funder over-labeling (above). Confidence is uncalibrated: 616 of 620 answers report ≥ 0.9, so the gate kept only 4 proposals and accepted 106 of 110 hard negatives. Injection resistance is imperfect: 3 of 12 obeyed (4 of 12 without the Plaid category). Our Plaid category is derived from truth with 8% noise; with and without it, accuracy on the 560 shared transactions was 0.823.
 
 ## 7. Tools and AI assistance
 
@@ -86,16 +79,16 @@ OpenAI `gpt-4.1-mini` is the model under test, not a development tool.
 
 ## 8. Part 3: production strategy (one page)
 
-One page, no code. It builds on what the evaluation measured: the reviewer gets every credit decision right on our data, but it over-labels funder debt, reports uncalibrated confidence and obeys some injected text.
+It builds on what we measured: correct decisions on our data, but funder over-labeling, uncalibrated confidence and partial injection resistance.
 
 ### 8.1 Shadow deployment and gates to go live
 
-Run the reviewer on every application next to the keyword engine while **decisions keep coming from the keyword engine**. For each application, store both label sets, the features, the offer and the decision under each, so every disagreement can be priced.
+Run the reviewer on every application while **decisions keep coming from the keyword engine**, storing both label sets with their features, offer and decision so every disagreement is priced.
 
 Promote in stages, each with its own gate:
 
-1. **Suggest only.** Underwriters see the proposed correction, its 5-second reason and its credit impact (offer change, decision flip). Nothing is applied automatically.
-2. **Auto-apply non-material corrections:** those that move no decision, no NSF/overdraft count and no high-risk share, and change the offer by less than 1%.
+1. **Suggest only.** Underwriters see the correction, its 5-second reason and its credit impact; nothing is applied.
+2. **Auto-apply non-material corrections** (no decision, NSF, overdraft or high-risk change; offer moves < 1%).
 3. **Auto-apply material corrections per error type**, only for types with enough adjudicated history.
 
 Gates are measured on underwriter-adjudicated cases, never on the model's own confidence: lower dollar error than the keyword engine; a low rate of accepted corrections that underwriters reject; no increase in approvals the underwriter would have declined; and a pass on the adversarial set. Funder-debt (`active_advance`) and business→personal corrections stay human-reviewed until their measured precision clears the gate, because one false funder label can erase most of an offer.

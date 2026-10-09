@@ -135,15 +135,28 @@ python3 -m fundo all
 | `data/runs/r1_*.json` | The first, failed reviewer run, preserved for comparison |
 | `data/sensitivity.json` | Mislabel Monte Carlo (2/5/10%), NSF observability, 61-day truncation |
 
-Single steps: `python3 -m fundo generate | report | review | sensitivity`. Generated files go to `--out` (default `data`); the frozen inputs (cache and adversarial set) are read from `--inputs` (default: this repository's `data/`).
+Single steps: `python3 -m fundo generate | report | review | sensitivity` (each accepts `--seed` and `--out`). Generated files go to `--out` (default `data`); the frozen inputs (cache and adversarial set) are read from `--inputs` (default: this repository's `data/`).
 
-### Regenerate the LLM cache (needs a key, costs money)
+### Run live with an API key (single command)
+
+The same single command runs the whole pipeline live when the key is set in the environment. It calls the API only for requests missing from the cache, appends each response to it, then finishes the report:
 
 ```bash
 export OPENAI_API_KEY=sk-...
-python3 -m fundo review            # calls the API only for cache misses
-python3 -m fundo review --refresh  # re-calls every request and appends to the cache
+python3 -m fundo all                  # live only for cache misses
+python3 -m fundo all --refresh        # re-call every request and append to the cache
 ```
+
+### Run on new data
+
+A different seed generates different businesses and transactions, so their reviews are not in the cache and **need the key** (without it the command exits with code 3 and the number of misses). The number of calls depends on the seed; the command prints it and a projected spend before calling. Write to a separate folder so the committed outputs stay untouched:
+
+```bash
+export OPENAI_API_KEY=sk-...
+python3 -m fundo all --seed 7 --out /tmp/fundo-seed7   # seed 7: 936 calls, about $0.27 and 17 minutes
+```
+
+New responses are appended to `data/llm_cache.jsonl`; restore it with `git checkout data/llm_cache.jsonl` if you do not want to keep them.
 
 Before any live call the command prints the number of calls and a projected spend, and aborts above $10. Each response is written and fsynced to the cache before it is used, so an interrupted run resumes where it stopped. A full run is 1,205 calls with `gpt-4.1-mini` (~$0.35, ~20 minutes); the committed cache holds two runs and cost $0.70 in total.
 
