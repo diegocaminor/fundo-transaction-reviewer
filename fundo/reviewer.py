@@ -17,7 +17,7 @@ from fundo.llm import MODEL
 from fundo.offer import compute_offer
 from fundo.schema import GROUPS, is_revenue, risk_signal_for
 
-PROMPT_VERSION = "r1"
+PROMPT_VERSION = "r2"  # r2: removed business-level bank_charges_nsf_fee from the payload
 # Pre-chosen policy thresholds and project-chosen materiality (not challenge
 # requirements). Fixed before the first API call; never tuned on results.
 BAR_MATERIAL = 0.85
@@ -74,7 +74,6 @@ def build_payload(txn, legacy_label, business, identical_count, use_pfc, error=N
     notes = legacy_label.get("notes", "")
     payload = {
         "business_type": business["type"],
-        "bank_charges_nsf_fee": business["bank_charges_nsf_fee"],
         "date": txn["date"],
         "amount": txn["amount"],
         "direction": "credit" if txn["amount"] > 0 else "debit",

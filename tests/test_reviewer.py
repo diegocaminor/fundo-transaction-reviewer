@@ -225,3 +225,11 @@ def test_human_review_flag_above_40_percent():
     three = {f"t{i}": answer("internal_transfer" if i < 3 else "none") for i in range(5)}
     assert reviewer.human_review_flags(t, run(t, legacy, two)) == {"b1": False}
     assert reviewer.human_review_flags(t, run(t, legacy, three)) == {"b1": True}
+
+
+def test_payload_has_no_business_level_nsf_fee_flag():
+    # r1 regression: the business-level `bank_charges_nsf_fee` field was read by the model as
+    # evidence that the transaction itself was an NSF charge.
+    p = reviewer.build_payload(txn("t1", "SQUARE INC 3546 DEPOSIT", 1450.64), lab(), BIZ, 1, use_pfc=True)
+    assert "bank_charges_nsf_fee" not in p
+    assert reviewer.PROMPT_VERSION == "r2"

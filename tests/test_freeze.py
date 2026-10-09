@@ -14,7 +14,7 @@ def sha(obj):
 
 
 def test_versions_are_pinned():
-    assert FLAG_RULES_VERSION == "f1" and PROMPT_VERSION == "r1"
+    assert FLAG_RULES_VERSION == "f1" and PROMPT_VERSION == "r2"  # r2: payload fix, see proposal log
 
 
 def test_prompt_schema_and_confusion_are_frozen():
