@@ -36,7 +36,7 @@ Flag coverage and recall against synthetic truth MUST be computed only in evalua
 #### Scenario: Recall reported
 - Given flagged sets and truth
 - When evaluation runs
-- Then the report includes flag recall of true mislabels and the count of mislabels missed outside the flagged set
+- Then the report includes flag recall of true legacy mislabels and the count of legacy mislabels outside the reviewed set (neither flagged nor audited)
 
 ### Requirement: Known flagging-rule bias
 The flagging rules were written with knowledge of the planted scenarios in the synthetic data (for example, the hint vocabulary overlaps planted descriptions). Offline coverage on this dataset MUST therefore be reported and documented as optimistic, an upper bound, not an estimate of production coverage. The rules MUST NOT be changed to correct this bias, because rewriting them now would be equally informed by the data. The random audit sample MUST be presented as the independent, production-style estimate of misses outside the flagged set.

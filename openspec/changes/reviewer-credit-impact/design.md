@@ -12,7 +12,7 @@ Every LLM response goes through a committed JSONL cache, so a run without a key 
 ```
 transactions + legacy_labels ─→ flagging.flag(use_pfc) ─→ review set (flagged + 5% audit)
         │                                                    │
-        │                     reviewer.review_txn ←── llm.CachedClient ←── data/llm_cache.jsonl
+        │                     reviewer.review ←── llm.complete ←── data/llm_cache.jsonl
         │                            │ (validate, retry, gate vs L)
         ↓                            ↓
  truth / legacy / reviewed labels ─→ compute_features/compute_offer ─→ review_report.json
@@ -24,7 +24,7 @@ transactions + legacy_labels ─→ flagging.flag(use_pfc) ─→ review set (fl
 | File | Action | Description |
 |---|---|---|
 | `fundo/flagging.py` | Create | `flag(txns, legacy, businesses, use_pfc) -> {tid: [rule_ids]}` and `audit_sample(...)`. The function does no file I/O. |
-| `fundo/llm.py` | Create | urllib Chat Completions client, `CachedClient`, cache key, `PRICES`, `estimate_spend` |
+| `fundo/llm.py` | Create | urllib Chat Completions client and cache as plain functions (`complete`, `cache_key`, `load_cache`, `append_record`), `PRICES`, `estimate_spend` |
 | `fundo/reviewer.py` | Create | `SYSTEM_PROMPT`, `PROMPT_VERSION`, `MODEL`, `build_payload`, `SCHEMA`, `validate`, `gate`, `review_txn`, `INJECTION_RE` |
 | `fundo/review_report.py` | Create | Runs both variants and the adversarial set. Computes metrics, writes `reviewed_labels.json` and `review_report.json`. This is the only module that reads truth or traps. |
 | `fundo/reviewer_hypotheses.py` | Create | `PREDICTIONS` (verbatim), `CHECKS`, `evaluate(doc)`. Same pattern as `hypotheses.py`. |
