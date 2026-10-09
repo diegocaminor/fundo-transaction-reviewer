@@ -7,12 +7,17 @@ Legacy-vs-truth comparison per business: label accuracy and feature/offer deltas
 ## Requirements
 
 ### Requirement: Report content and command
-`python -m fundo all` MUST generate data, classify, and write `data/baseline_report.json`, and print a table. For each business the report MUST include label accuracy, the features and offer under truth and under legacy, and their deltas. Output MUST be deterministic (sorted keys) and byte-identical across runs.
+`python -m fundo all` MUST generate data, classify, and write `data/baseline_report.json`, print a table, AND ALSO run the review from the committed cache and the sensitivity analysis, writing `data/reviewed_labels.json`, `data/review_report.json` and `data/sensitivity.json`. For each business the baseline report MUST include label accuracy, the features and offer under truth and under legacy, and their deltas. Output MUST be deterministic (sorted keys). All outputs, including pre-existing Phase 1 outputs, MUST be byte-identical across runs and with the same cache and seed, and `all` MUST succeed without `OPENAI_API_KEY`. Phase 1 outputs MUST remain byte-identical to their pre-change content.
 
-#### Scenario: One command, deterministic
-- Given a clean checkout
+#### Scenario: One command, deterministic, offline
+- Given a clean checkout with the committed cache and no API key
 - When `python -m fundo all` runs twice
-- Then all outputs, including `baseline_report.json`, are byte-identical
+- Then all outputs, including the three new files, are byte-identical across runs and `baseline_report.json` equals its Phase 1 content
+
+#### Scenario: Cache incomplete
+- Given a cache missing required entries and no key
+- When `python -m fundo all` runs
+- Then it exits nonzero reporting the miss count
 
 ### Requirement: Per-business predictions
 Each pre-registered prediction below MUST be evaluated by a pure check function implementing it literally, and its status ("passed" or "failed") with the deciding observation MUST be recorded in the report's top-level `hypotheses` list and printed on stdout. Prediction text MUST NOT be rewritten after measurement; a failed prediction is a finding, not a defect to hide, and the criterion MUST NOT be loosened. Tests MUST verify the check functions on synthetic entries and the measured baseline, not require that every prediction passes. Businesses without planted mislabels (`biz_03`, `biz_10`) are predicted to show exact equality: labels and computations are deterministic, so no tolerance is needed. Direction predictions ("offer delta > 0" / "< 0") MUST exceed a materiality threshold of 1% of the truth offer in the predicted direction. This 1% is a materiality threshold chosen by this project to ignore financially irrelevant deltas; it is NOT a requirement of the challenge and NOT a numerical tolerance. Changing a prediction requires written justification in the proposal.
