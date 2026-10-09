@@ -166,3 +166,52 @@ def test_only_the_report_reads_truth():
         source = (ROOT / f"fundo/{module}.py").read_text()
         assert "ground_truth" not in source and "traps" not in source, module
 
+
+
+# --- runner wiring (fake transport; no real reviewer output is produced) -------------------------
+
+import shutil
+
+from fundo import llm
+
+INPUTS = ("businesses.json", "transactions.json", "ground_truth.json", "adversarial.json")
+
+
+def _copy_inputs(tmp_path):
+    for name in INPUTS:
+        shutil.copy(ROOT / "data" / name, tmp_path / name)
+    return tmp_path
+
+
+def confirm_legacy(messages, schema, api_key):
+    legacy = json.loads(messages[1]["content"])["legacy"]
+    return json.dumps({"group": legacy["group"], "business": legacy["business"],
+                       "confidence": 0.9, "reason": "fake"}), None, {"prompt_tokens": 1000,
+                                                                     "completion_tokens": 30}
+
+
+def test_preflight_counts_attempt0_misses_without_calling(tmp_path):
+    data = _copy_inputs(tmp_path)
+    misses = rr.preflight(data)
+    assert set(misses) == {"pfc", "no_pfc", "adv_pfc", "adv_no_pfc"}
+    assert misses["adv_pfc"] == misses["adv_no_pfc"] == 12
+    assert 500 < misses["pfc"] < 700 and misses["no_pfc"] < misses["pfc"]
+    assert not (data / "llm_cache.jsonl").exists()
+
+
+def test_run_without_key_fails_loudly(tmp_path):
+    with pytest.raises(llm.CacheMiss):
+        rr.run(_copy_inputs(tmp_path), api_key=None)
+
+
+def test_run_fills_cache_then_reproduces_offline(tmp_path):
+    data = _copy_inputs(tmp_path)
+    rr.run(data, api_key="sk-test", call=confirm_legacy)
+    first = {n: (data / n).read_bytes() for n in ("review_report.json", "reviewed_labels.json")}
+    assert rr.preflight(data) == {"pfc": 0, "no_pfc": 0, "adv_pfc": 0, "adv_no_pfc": 0}
+    rr.run(data, api_key=None)  # cache only
+    assert {n: (data / n).read_bytes() for n in first} == first
+    doc = json.loads(first["review_report.json"])
+    assert set(doc["variants"]) == {"pfc", "no_pfc"} and doc["ablation"]["intersection_n"] > 0
+    assert [h["id"] for h in doc["hypotheses"]] == ["R1", "R2", "R3", "R4", "R5", "R6", "R8"]
+    assert doc["spend_usd"] > 0

@@ -7,12 +7,18 @@ feature/offer/decision impact. Label accuracy is reported as secondary.
 import json
 import math
 from collections import Counter, defaultdict
+from pathlib import Path
 
+from fundo import llm, reviewer_hypotheses
 from fundo.features import compute_features
-from fundo.legacy import classify
+from fundo.flagging import FLAG_RULES_VERSION, audit_sample, flag
+from fundo.legacy import classify, classify_all
 from fundo.offer import compute_offer
-from fundo.reviewer import human_review_flags, review
+from fundo.reviewer import (BAR_MATERIAL, BAR_OTHER, MATERIALITY, PROMPT_VERSION, SYSTEM_PROMPT_SHA,
+                            human_review_flags, review)
 from fundo.schema import RISK_GROUPS, is_revenue
+
+VARIANTS = (("pfc", True), ("no_pfc", False))
 
 STATUSES = ("confirmed", "corrected", "kept_low_confidence", "review_failed")
 COVERAGE_NOTE = ("Optimistic upper bound: the flag rules were written with knowledge of the planted "
@@ -181,3 +187,68 @@ def build_report(variants, ablation_block, adversarial, spend, meta=None, hypoth
 def write(path, doc):
     with open(path, "w") as f:
         f.write(json.dumps(doc, sort_keys=True, indent=2) + "\n")
+
+
+def _load(data_dir):
+    d = Path(data_dir)
+    load = lambda name: json.loads((d / name).read_text())
+    txns = load("transactions.json")
+    return (d, load("businesses.json"), txns, load("ground_truth.json"),
+            load("adversarial.json")["items"], classify_all(txns))
+
+
+def _passes(inputs, complete):
+    """Every review pass: both variants over flagged + audit, then the adversarial set."""
+    _, businesses, txns, _, items, legacy = inputs
+    out = {}
+    for name, use_pfc in VARIANTS:
+        flagged = flag(txns, legacy, use_pfc)
+        audit = audit_sample(txns, flagged)
+        ids = {**flagged, **{t: ["AUDIT"] for t in audit}}
+        out[name] = {"flagged": flagged, "audit": audit, "ids": ids,
+                     "reviewed": review(txns, legacy, businesses, ids, name, use_pfc, complete)}
+        out[f"adv_{name}"] = adversarial_block(items, txns, legacy, businesses, use_pfc,
+                                               f"adv_{name}", complete)
+    return out
+
+
+def preflight(data_dir="data"):
+    """Count attempt-0 cache misses per variant without calling the API (retries add more)."""
+    inputs = _load(data_dir)
+    cache = llm.load_cache(inputs[0] / "llm_cache.jsonl")
+    misses = Counter()
+
+    def dry(request):
+        key = llm.cache_key(request["model"], request["prompt_version"], request["system_prompt_sha"],
+                            request["payload"], request["attempt"], request["variant"])
+        if key in cache:
+            return cache[key]
+        misses[request["variant"]] += request["attempt"] == 0
+        return {"content": None, "refusal": "preflight"}
+
+    _passes(inputs, dry)
+    return {v: misses[v] for v in ("pfc", "no_pfc", "adv_pfc", "adv_no_pfc")}
+
+
+def run(data_dir="data", api_key=None, refresh=False, call=None):
+    """Review from the committed cache (calling the API only on misses with a key) and write outputs."""
+    inputs = _load(data_dir)
+    d, businesses, txns, truth, _, legacy = inputs
+    path = d / "llm_cache.jsonl"
+    cache = llm.load_cache(path)
+    res = _passes(inputs, lambda r: llm.complete(cache, path, r, api_key, refresh, call))
+
+    variants = {name: variant_block(txns, businesses, truth, legacy, res[name]["flagged"],
+                                    res[name]["audit"], res[name]["reviewed"]) for name, _ in VARIANTS}
+    ab = ablation(txns, truth, res["pfc"]["reviewed"], res["pfc"]["ids"],
+                  res["no_pfc"]["reviewed"], res["no_pfc"]["ids"])
+    with open(path) as f:  # every paid line counts, including superseded ones
+        spend = llm.estimate_spend(json.loads(line) for line in f if line.strip())
+    meta = {"model": llm.MODEL, "prompt_version": PROMPT_VERSION, "system_prompt_sha": SYSTEM_PROMPT_SHA,
+            "flag_rules_version": FLAG_RULES_VERSION, "audit_rate": 0.05,
+            "thresholds": {"material": BAR_MATERIAL, "other": BAR_OTHER}, "materiality": MATERIALITY}
+    doc = build_report(variants, ab, {k: res[k] for k in ("adv_pfc", "adv_no_pfc")}, spend, meta)
+    doc["hypotheses"] = reviewer_hypotheses.evaluate(doc)
+    write(d / "review_report.json", doc)
+    write(d / "reviewed_labels.json", res["pfc"]["reviewed"])
+    return doc

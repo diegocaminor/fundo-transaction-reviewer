@@ -88,7 +88,7 @@ Dependency graph: P1 -> P2 -> P3 -> P5 -> P6 -> P7 -> P8. P4 (sensitivity) depen
 ## Phase 7: Cache fill (real API)  | commit: `data(llm-cache): add committed reviewer cache and review outputs`
 
 - [ ] 7.0 **[USER ACTION]** Export `OPENAI_API_KEY` in the shell session yourself (never paste it in chat or commit it). Confirm the working tree is clean at the Phase 6 freeze commit.
-- [ ] 7.1 Dry preflight with the key set: print the count of attempt-0 requests for `pfc`, `no_pfc`, `adv_pfc`, `adv_no_pfc` and the pre-run spend projection; abort if projected > $10.
+- [x] 7.1 Dry preflight with the key set: print the count of attempt-0 requests for `pfc`, `no_pfc`, `adv_pfc`, `adv_no_pfc` and the pre-run spend projection; abort if projected > $10.
 - [ ] 7.2 Run `python -m fundo review` live (both variants + adversarial). Interrupt-safe because every response is flushed before use; re-running resumes from the cache.
 - [ ] 7.3 Inspect `data/llm_cache.jsonl`: every record's `system_prompt_sha`/`prompt_version` equals current; confirm `estimate_spend` < $10 from cached usage; no secrets in the file.
 - [ ] 7.4 Re-run WITHOUT the key (`env -u OPENAI_API_KEY`): succeeds with no network and writes `reviewed_labels.json`, `review_report.json` byte-identical to the keyed run; confirm via file hashes.
