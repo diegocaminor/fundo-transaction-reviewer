@@ -4,7 +4,7 @@ LLM-based reviewer that validates labels produced by a legacy keyword transactio
 
 Built for the [Fundo AI Engineer Take-Home Challenge](https://fundo-llc.github.io/fundo-take-home/ai-engineer-challenge/).
 
-> Status: work in progress.
+> Status: work in progress. Phase 1 (synthetic data, legacy engine, credit features and baseline report) is complete.
 
 ## Context
 
@@ -92,15 +92,48 @@ Synthetic only — no real customer data.
 
 ## Running
 
-_TBD — commands will be documented here once the pipeline exists._
+Requires Python 3.11+. The package uses only the standard library, so running it needs no install, virtualenv or API key. Run every command from the repository root.
+
+### Baseline: data, legacy engine and report
 
 ```bash
-# Run from cache (no API key needed)
-# TBD
-
-# Regenerate the LLM cache (requires API key)
-# TBD
+python3 -m fundo all
 ```
+
+This regenerates the synthetic data (seed 42), labels it with the legacy keyword engine, and writes the legacy-vs-truth report to `data/`:
+
+| File | Content |
+|---|---|
+| `data/businesses.json` | 10 synthetic businesses |
+| `data/transactions.json` | ~2,000 Plaid-format transactions |
+| `data/ground_truth.json` | Correct label per transaction |
+| `data/traps.json` | Which transactions are planted traps |
+| `data/legacy_labels.json` | Legacy keyword engine labels |
+| `data/baseline_report.json` | Per-business features, offers, planned vs unplanned mislabels, and hypothesis results |
+
+All outputs are committed. A run with the default seed reproduces them byte for byte, so `git status` stays clean afterwards.
+
+Other subcommands and options:
+
+```bash
+python3 -m fundo generate          # data only
+python3 -m fundo report            # legacy labels + report from existing data
+python3 -m fundo all --seed 7 --out /tmp/fundo   # different seed, separate folder
+```
+
+Amounts follow the Fundo PDF sign convention: credits are positive and debits negative, the reverse of native Plaid.
+
+### Tests
+
+```bash
+python3 -m venv .venv
+.venv/bin/pip install pytest
+.venv/bin/python -m pytest
+```
+
+### LLM reviewer
+
+Not implemented yet (Phase 2). The commands to run it from the committed cache and to regenerate the cache will be added here.
 
 ## Deliverables
 
