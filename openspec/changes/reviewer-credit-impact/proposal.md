@@ -40,7 +40,7 @@ Phase 1 showed that legacy mislabels move offers (biz_01/04/05 inflated, biz_08 
 - **Invalid output.** Refusal, parse failure or enum violation triggers a limited retry. After that, the legacy label is kept with `review_failed`.
 - **Acceptance gate (credit impact, symmetric).** For each proposed correction `c` on business `b`, let `L` be the legacy label set and `L' = L` with only `c` applied. Recompute features and offer for `b`. `c` is **credit-material** if any of these hold:
   1. the decision (`offer > 0`) differs between `L` and `L'`
-  2. `offer(L) > 0` and `|offer(L') − offer(L)| ≥ 0.01 × offer(L)`. The 1% is the project's chosen materiality threshold (reused from Phase 1), NOT a requirement of the challenge.
+  2. `offer(L) > 0` and `|offer(L') − offer(L)| ≥ 0.01 × offer(L)`. The 1% is the project's chosen materiality threshold, NOT a requirement of the challenge. It reuses the Phase 1 value, but the rule differs: Phase 1 checked a predicted direction against the truth offer, while this gate checks the absolute marginal change against the legacy offer. When `offer(L) = 0`, only a decision flip makes the offer condition material.
   3. the NSF count differs
   4. the overdraft count differs. The formula does not price overdrafts, and at no-fee banks they are the only observable stress signal, so this counts as material on its own.
   5. the high-risk debit share differs. The formula does not price high risk, so this counts as material on its own.
@@ -105,3 +105,5 @@ All modules are additive. Revert the `feat/reviewer-credit-impact` branch. Phase
 - Overdraft-count change: **credit-material**, requires 0.85 (user decision).
 - The 1% offer-change rule stays documented as a chosen materiality threshold, not a challenge requirement (user decision).
 - `data-baseline` is verified and archived before Phase 2 specs are written, so Phase 2 deltas target `openspec/specs/` (user decision).
+- Mislabel sensitivity: the realistic corruption model includes business/personal flips as well as group changes; the rate is defined at the transaction level (one corruption per corrupted transaction) (user decision).
+- Flagging-rule bias: the rules were written with knowledge of the planted scenarios, so offline coverage on this dataset is optimistic (upper bound). Rules stay unchanged. The random audit sample is the independent, production-style estimate of misses, reported with its sample size and a Wilson 95% interval because of its sampling variance (user decision).
