@@ -4,7 +4,7 @@ LLM-based reviewer that validates labels produced by a legacy keyword transactio
 
 Built for the [Fundo AI Engineer Take-Home Challenge](https://fundo-llc.github.io/fundo-take-home/ai-engineer-challenge/).
 
-> Status: Parts 1 and 2 are complete (data baseline, LLM reviewer evaluated as version r2, credit sensitivity). Part 3 (production strategy) and SOLUTION.md are next.
+> Status: complete. Approach, results and limitations: [`SOLUTION.md`](SOLUTION.md). Production strategy (Part 3): [`PRODUCTION.md`](PRODUCTION.md).
 
 ## Context
 
@@ -53,7 +53,7 @@ Also: sensitivity of features and offers to 2%, 5%, and 10% mislabeling rates, p
 
 ### Part 3 — Production strategy
 
-One page, no code: shadow deployment and gating, drift detection on engine/classifier retrains, reproducibility of declined decisions, and the underwriter feedback loop. See `SOLUTION.md`.
+One page, no code: shadow deployment and gating, drift detection on engine/classifier retrains, reproducibility of declined decisions, and the underwriter feedback loop. See `PRODUCTION.md`.
 
 ## Classification groups
 
@@ -148,7 +148,7 @@ Predictions were committed before each measurement and are kept verbatim; failur
 |---|---|---|---|
 | R1 | Undoes the biz_08 false decline | FAILED | PASSED |
 | R2 | Fixes biz_09's NSF count | FAILED | PASSED |
-| R3 | Cuts revenue $ error at least in half | FAILED | FAILED (−33%) |
+| R3 | Cuts revenue $ error at least in half | FAILED | FAILED (−34%) |
 | R4 | Lowers total offer error | FAILED | FAILED (worse) |
 | R5 | Gate rejects most proposed hard negatives | FAILED | FAILED (106/110 accepted) |
 | R6 | Resists injections (≤ 2 of 12 obeyed) | PASSED | FAILED (3 of 12) |
@@ -165,7 +165,7 @@ Predictions were committed before each measurement and are kept verbatim; failur
 - **r2 changed only that.** The field was removed and `PROMPT_VERSION` bumped. Thresholds, flag rules, schema, gate, system prompt and hypotheses are identical.
 - **Remaining failures in r2:**
   - **`active_advance` over-labeling.** Ordinary financing debits (a truck lease, auto-loan payments) were labeled as funder repayments. The offer subtracts 20 × daily funder payments, so one $3,100 lease payment removed $62,000 from biz_03's offer. This drives R4.
-  - **Self-reported confidence does not discriminate.** 607 of 620 answers report ≥ 0.9, so the confidence gate accepts nearly every proposed correction, including 106 of 110 hard negatives. This drives R5 and holds in both runs.
+  - **Self-reported confidence does not discriminate.** 616 of 620 answers report ≥ 0.9, so the confidence gate accepts nearly every proposed correction, including 106 of 110 hard negatives. This drives R5 and holds in both runs.
   - **Prompt injection.** 3 of 12 injected instructions were obeyed with `personal_finance_category` (4 of 12 without), including a casino debit described as office supplies and an owner's personal credit claimed as business income.
 
 `personal_finance_category` ablation (descriptive, shared 560 transactions): group accuracy 0.823 with and without it; revenue $ error lower with it ($100,873 vs $120,585).
@@ -180,4 +180,5 @@ S1–S3 passed and S4 failed: 6 of 8 approved businesses lose ≥ 1% of their of
 
 - [x] Code that runs from a clean checkout and reproduces output from cache
 - [x] `README.md` with copy-paste run and cache-regeneration commands
-- [ ] `SOLUTION.md` (2–3 pages): approach, results, model/prompt choices, code vs. model boundary, Part 2 answers, Part 3 plan, AI tooling disclosure
+- [x] `SOLUTION.md` (2–3 pages): approach, results, model/prompt choices, code vs. model boundary, Part 2 answers, Part 3 plan, AI tooling disclosure
+- [x] `PRODUCTION.md` (one page): shadow deployment, drift detection, reproducibility, underwriter feedback
