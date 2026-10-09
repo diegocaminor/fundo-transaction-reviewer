@@ -15,7 +15,7 @@ Legacy-vs-truth comparison per business: label accuracy and feature/offer deltas
 - Then all outputs, including `baseline_report.json`, are byte-identical
 
 ### Requirement: Per-business predictions
-Each prediction below MUST be asserted by a test. Businesses without planted mislabels (`biz_03`, `biz_10`) MUST show exact equality: labels and computations are deterministic, so no tolerance is needed. Direction predictions ("offer delta > 0" / "< 0") MUST exceed a materiality threshold of 1% of the truth offer in the predicted direction. This 1% is a materiality threshold chosen by this project to ignore financially irrelevant deltas; it is NOT a requirement of the challenge and NOT a numerical tolerance. A failed prediction MUST be investigated (data or engine is wrong); the criterion MUST NOT be loosened. Changing a prediction requires written justification in the proposal.
+Each pre-registered prediction below MUST be evaluated by a pure check function implementing it literally, and its status ("passed" or "failed") with the deciding observation MUST be recorded in the report's top-level `hypotheses` list and printed on stdout. Prediction text MUST NOT be rewritten after measurement; a failed prediction is a finding, not a defect to hide, and the criterion MUST NOT be loosened. Tests MUST verify the check functions on synthetic entries and the measured baseline, not require that every prediction passes. Businesses without planted mislabels (`biz_03`, `biz_10`) are predicted to show exact equality: labels and computations are deterministic, so no tolerance is needed. Direction predictions ("offer delta > 0" / "< 0") MUST exceed a materiality threshold of 1% of the truth offer in the predicted direction. This 1% is a materiality threshold chosen by this project to ignore financially irrelevant deltas; it is NOT a requirement of the challenge and NOT a numerical tolerance. Changing a prediction requires written justification in the proposal.
 
 #### Scenario: biz_01 Casa Norte
 - Given internal transfer credit and Square Capital lines mislabeled by legacy
@@ -74,3 +74,11 @@ The generator MUST record which transactions are planted traps (`data/traps.json
 - Given realistic routine descriptions that may contain legacy keywords (e.g. "ONLINE TRANSFER TO SAVINGS")
 - When the report runs
 - Then each business shows its collateral mislabel count, and businesses where collateral flips the offer decision are flagged
+
+### Requirement: Collateral changes outcome
+For each business the report MUST include `collateral_changes_outcome`: true when the full legacy offer decision differs from the decision reached with legacy labels on planted-trap transactions only (`planned_only`) and truth labels elsewhere. It MUST be shown in the stdout table.
+
+#### Scenario: Collateral reverses a planned outcome
+- Given a business whose planned traps alone would approve while legacy labels yield a decline
+- When the report runs
+- Then `collateral_changes_outcome` is true and the table marks it

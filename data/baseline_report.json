@@ -1,0 +1,865 @@
+{
+  "businesses": {
+    "biz_01": {
+      "accuracy": {
+        "business": 1.0,
+        "group": 0.7633,
+        "revenue": 0.9929
+      },
+      "collateral_changes_outcome": false,
+      "collateral_flips_decision": false,
+      "collateral_only": {
+        "decision": "approve",
+        "features": {
+          "avg_monthly_revenue": 49604.32,
+          "daily_funder_payments": 145.0,
+          "high_risk_debit_share": 0.0056,
+          "nsf_count": 4,
+          "overdraft_count": 1,
+          "revenue_share": 0.8647
+        },
+        "offer": 56625.18
+      },
+      "decision": {
+        "flipped": false,
+        "legacy": "approve",
+        "truth": "approve"
+      },
+      "features": {
+        "delta": {
+          "avg_monthly_revenue": 7666.67,
+          "daily_funder_payments": -145.0,
+          "high_risk_debit_share": 0.0,
+          "nsf_count": 3,
+          "overdraft_count": 0,
+          "revenue_share": 0.1337
+        },
+        "legacy": {
+          "avg_monthly_revenue": 57270.99,
+          "daily_funder_payments": 0.0,
+          "high_risk_debit_share": 0.0056,
+          "nsf_count": 4,
+          "overdraft_count": 1,
+          "revenue_share": 0.9984
+        },
+        "truth": {
+          "avg_monthly_revenue": 49604.32,
+          "daily_funder_payments": 145.0,
+          "high_risk_debit_share": 0.0056,
+          "nsf_count": 1,
+          "overdraft_count": 1,
+          "revenue_share": 0.8647
+        }
+      },
+      "mislabels": {
+        "planned": 64,
+        "planned_by_trap": {
+          "internal_transfer_credit": 2,
+          "square_capital_repay": 62
+        },
+        "unplanned": 3,
+        "unplanned_by_pattern": {
+          "internal_transfer->nsf": 3
+        }
+      },
+      "n_txns": 283,
+      "offer": {
+        "delta": 12100.01,
+        "legacy": 68725.19,
+        "truth": 56625.18
+      },
+      "planned_only": {
+        "decision": "approve",
+        "features": {
+          "avg_monthly_revenue": 57270.99,
+          "daily_funder_payments": 0.0,
+          "high_risk_debit_share": 0.0056,
+          "nsf_count": 1,
+          "overdraft_count": 1,
+          "revenue_share": 0.9984
+        },
+        "offer": 68725.19
+      }
+    },
+    "biz_02": {
+      "accuracy": {
+        "business": 1.0,
+        "group": 0.9483,
+        "revenue": 1.0
+      },
+      "collateral_changes_outcome": false,
+      "collateral_flips_decision": false,
+      "collateral_only": {
+        "decision": "approve",
+        "features": {
+          "avg_monthly_revenue": 13112.02,
+          "daily_funder_payments": 0.0,
+          "high_risk_debit_share": 0.0,
+          "nsf_count": 2,
+          "overdraft_count": 7,
+          "revenue_share": 1.0
+        },
+        "offer": 15734.42
+      },
+      "decision": {
+        "flipped": false,
+        "legacy": "approve",
+        "truth": "approve"
+      },
+      "features": {
+        "delta": {
+          "avg_monthly_revenue": 0.0,
+          "daily_funder_payments": 0.0,
+          "high_risk_debit_share": 0.0,
+          "nsf_count": 2,
+          "overdraft_count": -7,
+          "revenue_share": 0.0
+        },
+        "legacy": {
+          "avg_monthly_revenue": 13112.02,
+          "daily_funder_payments": 0.0,
+          "high_risk_debit_share": 0.0,
+          "nsf_count": 2,
+          "overdraft_count": 0,
+          "revenue_share": 1.0
+        },
+        "truth": {
+          "avg_monthly_revenue": 13112.02,
+          "daily_funder_payments": 0.0,
+          "high_risk_debit_share": 0.0,
+          "nsf_count": 0,
+          "overdraft_count": 7,
+          "revenue_share": 1.0
+        }
+      },
+      "mislabels": {
+        "planned": 7,
+        "planned_by_trap": {
+          "item_paid_into_od": 7
+        },
+        "unplanned": 2,
+        "unplanned_by_pattern": {
+          "internal_transfer->nsf": 2
+        }
+      },
+      "n_txns": 174,
+      "offer": {
+        "delta": 0.0,
+        "legacy": 15734.42,
+        "truth": 15734.42
+      },
+      "planned_only": {
+        "decision": "approve",
+        "features": {
+          "avg_monthly_revenue": 13112.02,
+          "daily_funder_payments": 0.0,
+          "high_risk_debit_share": 0.0,
+          "nsf_count": 0,
+          "overdraft_count": 0,
+          "revenue_share": 1.0
+        },
+        "offer": 15734.42
+      }
+    },
+    "biz_03": {
+      "accuracy": {
+        "business": 1.0,
+        "group": 0.9863,
+        "revenue": 1.0
+      },
+      "collateral_changes_outcome": false,
+      "collateral_flips_decision": false,
+      "collateral_only": {
+        "decision": "approve",
+        "features": {
+          "avg_monthly_revenue": 66133.12,
+          "daily_funder_payments": 0.0,
+          "high_risk_debit_share": 0.0,
+          "nsf_count": 2,
+          "overdraft_count": 0,
+          "revenue_share": 1.0
+        },
+        "offer": 79359.74
+      },
+      "decision": {
+        "flipped": false,
+        "legacy": "approve",
+        "truth": "approve"
+      },
+      "features": {
+        "delta": {
+          "avg_monthly_revenue": 0.0,
+          "daily_funder_payments": 0.0,
+          "high_risk_debit_share": 0.0,
+          "nsf_count": 2,
+          "overdraft_count": 0,
+          "revenue_share": 0.0
+        },
+        "legacy": {
+          "avg_monthly_revenue": 66133.12,
+          "daily_funder_payments": 0.0,
+          "high_risk_debit_share": 0.0,
+          "nsf_count": 2,
+          "overdraft_count": 0,
+          "revenue_share": 1.0
+        },
+        "truth": {
+          "avg_monthly_revenue": 66133.12,
+          "daily_funder_payments": 0.0,
+          "high_risk_debit_share": 0.0,
+          "nsf_count": 0,
+          "overdraft_count": 0,
+          "revenue_share": 1.0
+        }
+      },
+      "mislabels": {
+        "planned": 0,
+        "planned_by_trap": {},
+        "unplanned": 2,
+        "unplanned_by_pattern": {
+          "internal_transfer->nsf": 2
+        }
+      },
+      "n_txns": 146,
+      "offer": {
+        "delta": 0.0,
+        "legacy": 79359.74,
+        "truth": 79359.74
+      },
+      "planned_only": {
+        "decision": "approve",
+        "features": {
+          "avg_monthly_revenue": 66133.12,
+          "daily_funder_payments": 0.0,
+          "high_risk_debit_share": 0.0,
+          "nsf_count": 0,
+          "overdraft_count": 0,
+          "revenue_share": 1.0
+        },
+        "offer": 79359.74
+      }
+    },
+    "biz_04": {
+      "accuracy": {
+        "business": 1.0,
+        "group": 0.7833,
+        "revenue": 0.9958
+      },
+      "collateral_changes_outcome": false,
+      "collateral_flips_decision": false,
+      "collateral_only": {
+        "decision": "approve",
+        "features": {
+          "avg_monthly_revenue": 40541.62,
+          "daily_funder_payments": 310.0,
+          "high_risk_debit_share": 0.0,
+          "nsf_count": 2,
+          "overdraft_count": 0,
+          "revenue_share": 0.7525
+        },
+        "offer": 42449.94
+      },
+      "decision": {
+        "flipped": false,
+        "legacy": "approve",
+        "truth": "approve"
+      },
+      "features": {
+        "delta": {
+          "avg_monthly_revenue": 13333.33,
+          "daily_funder_payments": -310.0,
+          "high_risk_debit_share": 0.0,
+          "nsf_count": 2,
+          "overdraft_count": 0,
+          "revenue_share": 0.2475
+        },
+        "legacy": {
+          "avg_monthly_revenue": 53874.95,
+          "daily_funder_payments": 0.0,
+          "high_risk_debit_share": 0.0,
+          "nsf_count": 2,
+          "overdraft_count": 0,
+          "revenue_share": 1.0
+        },
+        "truth": {
+          "avg_monthly_revenue": 40541.62,
+          "daily_funder_payments": 310.0,
+          "high_risk_debit_share": 0.0,
+          "nsf_count": 0,
+          "overdraft_count": 0,
+          "revenue_share": 0.7525
+        }
+      },
+      "mislabels": {
+        "planned": 50,
+        "planned_by_trap": {
+          "funder_disbursement": 1,
+          "mca_daily_payment": 49
+        },
+        "unplanned": 2,
+        "unplanned_by_pattern": {
+          "internal_transfer->nsf": 2
+        }
+      },
+      "n_txns": 240,
+      "offer": {
+        "delta": 22200.0,
+        "legacy": 64649.94,
+        "truth": 42449.94
+      },
+      "planned_only": {
+        "decision": "approve",
+        "features": {
+          "avg_monthly_revenue": 53874.95,
+          "daily_funder_payments": 0.0,
+          "high_risk_debit_share": 0.0,
+          "nsf_count": 0,
+          "overdraft_count": 0,
+          "revenue_share": 1.0
+        },
+        "offer": 64649.94
+      }
+    },
+    "biz_05": {
+      "accuracy": {
+        "business": 0.9512,
+        "group": 0.9878,
+        "revenue": 0.9512
+      },
+      "collateral_changes_outcome": false,
+      "collateral_flips_decision": false,
+      "collateral_only": {
+        "decision": "approve",
+        "features": {
+          "avg_monthly_revenue": 38521.93,
+          "daily_funder_payments": 0.0,
+          "high_risk_debit_share": 0.0,
+          "nsf_count": 2,
+          "overdraft_count": 0,
+          "revenue_share": 0.8815
+        },
+        "offer": 46226.32
+      },
+      "decision": {
+        "flipped": false,
+        "legacy": "approve",
+        "truth": "approve"
+      },
+      "features": {
+        "delta": {
+          "avg_monthly_revenue": 5179.84,
+          "daily_funder_payments": 0.0,
+          "high_risk_debit_share": 0.0,
+          "nsf_count": 2,
+          "overdraft_count": 0,
+          "revenue_share": 0.1185
+        },
+        "legacy": {
+          "avg_monthly_revenue": 43701.77,
+          "daily_funder_payments": 0.0,
+          "high_risk_debit_share": 0.0,
+          "nsf_count": 2,
+          "overdraft_count": 0,
+          "revenue_share": 1.0
+        },
+        "truth": {
+          "avg_monthly_revenue": 38521.93,
+          "daily_funder_payments": 0.0,
+          "high_risk_debit_share": 0.0,
+          "nsf_count": 0,
+          "overdraft_count": 0,
+          "revenue_share": 0.8815
+        }
+      },
+      "mislabels": {
+        "planned": 8,
+        "planned_by_trap": {
+          "owner_personal_credit": 8
+        },
+        "unplanned": 2,
+        "unplanned_by_pattern": {
+          "internal_transfer->nsf": 2
+        }
+      },
+      "n_txns": 164,
+      "offer": {
+        "delta": 6215.8,
+        "legacy": 52442.12,
+        "truth": 46226.32
+      },
+      "planned_only": {
+        "decision": "approve",
+        "features": {
+          "avg_monthly_revenue": 43701.77,
+          "daily_funder_payments": 0.0,
+          "high_risk_debit_share": 0.0,
+          "nsf_count": 0,
+          "overdraft_count": 0,
+          "revenue_share": 1.0
+        },
+        "offer": 52442.12
+      }
+    },
+    "biz_06": {
+      "accuracy": {
+        "business": 1.0,
+        "group": 0.9529,
+        "revenue": 1.0
+      },
+      "collateral_changes_outcome": false,
+      "collateral_flips_decision": false,
+      "collateral_only": {
+        "decision": "approve",
+        "features": {
+          "avg_monthly_revenue": 69041.11,
+          "daily_funder_payments": 0.0,
+          "high_risk_debit_share": 0.0208,
+          "nsf_count": 3,
+          "overdraft_count": 0,
+          "revenue_share": 1.0
+        },
+        "offer": 82849.33
+      },
+      "decision": {
+        "flipped": false,
+        "legacy": "approve",
+        "truth": "approve"
+      },
+      "features": {
+        "delta": {
+          "avg_monthly_revenue": 0.0,
+          "daily_funder_payments": 0.0,
+          "high_risk_debit_share": 0.0039,
+          "nsf_count": 3,
+          "overdraft_count": 0,
+          "revenue_share": 0.0
+        },
+        "legacy": {
+          "avg_monthly_revenue": 69041.11,
+          "daily_funder_payments": 0.0,
+          "high_risk_debit_share": 0.0247,
+          "nsf_count": 3,
+          "overdraft_count": 0,
+          "revenue_share": 1.0
+        },
+        "truth": {
+          "avg_monthly_revenue": 69041.11,
+          "daily_funder_payments": 0.0,
+          "high_risk_debit_share": 0.0208,
+          "nsf_count": 0,
+          "overdraft_count": 0,
+          "revenue_share": 1.0
+        }
+      },
+      "mislabels": {
+        "planned": 6,
+        "planned_by_trap": {
+          "lucky_dragon_hard_negative": 6
+        },
+        "unplanned": 3,
+        "unplanned_by_pattern": {
+          "internal_transfer->nsf": 3
+        }
+      },
+      "n_txns": 191,
+      "offer": {
+        "delta": 0.0,
+        "legacy": 82849.33,
+        "truth": 82849.33
+      },
+      "planned_only": {
+        "decision": "approve",
+        "features": {
+          "avg_monthly_revenue": 69041.11,
+          "daily_funder_payments": 0.0,
+          "high_risk_debit_share": 0.0247,
+          "nsf_count": 0,
+          "overdraft_count": 0,
+          "revenue_share": 1.0
+        },
+        "offer": 82849.33
+      }
+    },
+    "biz_07": {
+      "accuracy": {
+        "business": 1.0,
+        "group": 0.963,
+        "revenue": 1.0
+      },
+      "collateral_changes_outcome": false,
+      "collateral_flips_decision": false,
+      "collateral_only": {
+        "decision": "approve",
+        "features": {
+          "avg_monthly_revenue": 45484.12,
+          "daily_funder_payments": 0.0,
+          "high_risk_debit_share": 0.0465,
+          "nsf_count": 2,
+          "overdraft_count": 0,
+          "revenue_share": 1.0
+        },
+        "offer": 54580.94
+      },
+      "decision": {
+        "flipped": false,
+        "legacy": "approve",
+        "truth": "approve"
+      },
+      "features": {
+        "delta": {
+          "avg_monthly_revenue": 0.0,
+          "daily_funder_payments": 0.0,
+          "high_risk_debit_share": -0.0308,
+          "nsf_count": 2,
+          "overdraft_count": 0,
+          "revenue_share": 0.0
+        },
+        "legacy": {
+          "avg_monthly_revenue": 45484.12,
+          "daily_funder_payments": 0.0,
+          "high_risk_debit_share": 0.0157,
+          "nsf_count": 2,
+          "overdraft_count": 0,
+          "revenue_share": 1.0
+        },
+        "truth": {
+          "avg_monthly_revenue": 45484.12,
+          "daily_funder_payments": 0.0,
+          "high_risk_debit_share": 0.0465,
+          "nsf_count": 0,
+          "overdraft_count": 0,
+          "revenue_share": 1.0
+        }
+      },
+      "mislabels": {
+        "planned": 6,
+        "planned_by_trap": {
+          "debt_settlement_punctuated": 3,
+          "garnishment_punctuated": 3
+        },
+        "unplanned": 2,
+        "unplanned_by_pattern": {
+          "internal_transfer->nsf": 2
+        }
+      },
+      "n_txns": 216,
+      "offer": {
+        "delta": 0.0,
+        "legacy": 54580.94,
+        "truth": 54580.94
+      },
+      "planned_only": {
+        "decision": "approve",
+        "features": {
+          "avg_monthly_revenue": 45484.12,
+          "daily_funder_payments": 0.0,
+          "high_risk_debit_share": 0.0157,
+          "nsf_count": 0,
+          "overdraft_count": 0,
+          "revenue_share": 1.0
+        },
+        "offer": 54580.94
+      }
+    },
+    "biz_08": {
+      "accuracy": {
+        "business": 1.0,
+        "group": 0.6489,
+        "revenue": 0.6565
+      },
+      "collateral_changes_outcome": false,
+      "collateral_flips_decision": false,
+      "collateral_only": {
+        "decision": "approve",
+        "features": {
+          "avg_monthly_revenue": 32691.93,
+          "daily_funder_payments": 0.0,
+          "high_risk_debit_share": 0.0,
+          "nsf_count": 2,
+          "overdraft_count": 0,
+          "revenue_share": 1.0
+        },
+        "offer": 39230.32
+      },
+      "decision": {
+        "flipped": true,
+        "legacy": "decline",
+        "truth": "approve"
+      },
+      "features": {
+        "delta": {
+          "avg_monthly_revenue": -29305.72,
+          "daily_funder_payments": 0.0,
+          "high_risk_debit_share": 0.0,
+          "nsf_count": 92,
+          "overdraft_count": 0,
+          "revenue_share": -0.8964
+        },
+        "legacy": {
+          "avg_monthly_revenue": 3386.21,
+          "daily_funder_payments": 0.0,
+          "high_risk_debit_share": 0.0,
+          "nsf_count": 92,
+          "overdraft_count": 0,
+          "revenue_share": 0.1036
+        },
+        "truth": {
+          "avg_monthly_revenue": 32691.93,
+          "daily_funder_payments": 0.0,
+          "high_risk_debit_share": 0.0,
+          "nsf_count": 0,
+          "overdraft_count": 0,
+          "revenue_share": 1.0
+        }
+      },
+      "mislabels": {
+        "planned": 90,
+        "planned_by_trap": {
+          "stripe_transfer_payout": 90
+        },
+        "unplanned": 2,
+        "unplanned_by_pattern": {
+          "internal_transfer->nsf": 2
+        }
+      },
+      "n_txns": 262,
+      "offer": {
+        "delta": -39230.32,
+        "legacy": 0.0,
+        "truth": 39230.32
+      },
+      "planned_only": {
+        "decision": "decline",
+        "features": {
+          "avg_monthly_revenue": 3386.21,
+          "daily_funder_payments": 0.0,
+          "high_risk_debit_share": 0.0,
+          "nsf_count": 90,
+          "overdraft_count": 0,
+          "revenue_share": 0.1036
+        },
+        "offer": 0.0
+      }
+    },
+    "biz_09": {
+      "accuracy": {
+        "business": 1.0,
+        "group": 0.9815,
+        "revenue": 1.0
+      },
+      "collateral_changes_outcome": true,
+      "collateral_flips_decision": false,
+      "collateral_only": {
+        "decision": "decline",
+        "features": {
+          "avg_monthly_revenue": 56232.29,
+          "daily_funder_payments": 0.0,
+          "high_risk_debit_share": 0.0,
+          "nsf_count": 8,
+          "overdraft_count": 0,
+          "revenue_share": 1.0
+        },
+        "offer": 0.0
+      },
+      "decision": {
+        "flipped": false,
+        "legacy": "decline",
+        "truth": "decline"
+      },
+      "features": {
+        "delta": {
+          "avg_monthly_revenue": 0.0,
+          "daily_funder_payments": 0.0,
+          "high_risk_debit_share": 0.0,
+          "nsf_count": 1,
+          "overdraft_count": 0,
+          "revenue_share": 0.0
+        },
+        "legacy": {
+          "avg_monthly_revenue": 56232.29,
+          "daily_funder_payments": 0.0,
+          "high_risk_debit_share": 0.0,
+          "nsf_count": 7,
+          "overdraft_count": 0,
+          "revenue_share": 1.0
+        },
+        "truth": {
+          "avg_monthly_revenue": 56232.29,
+          "daily_funder_payments": 0.0,
+          "high_risk_debit_share": 0.0,
+          "nsf_count": 6,
+          "overdraft_count": 0,
+          "revenue_share": 1.0
+        }
+      },
+      "mislabels": {
+        "planned": 1,
+        "planned_by_trap": {
+          "nsf_fee_punctuated": 1
+        },
+        "unplanned": 2,
+        "unplanned_by_pattern": {
+          "internal_transfer->nsf": 2
+        }
+      },
+      "n_txns": 162,
+      "offer": {
+        "delta": 0.0,
+        "legacy": 0.0,
+        "truth": 0.0
+      },
+      "planned_only": {
+        "decision": "approve",
+        "features": {
+          "avg_monthly_revenue": 56232.29,
+          "daily_funder_payments": 0.0,
+          "high_risk_debit_share": 0.0,
+          "nsf_count": 5,
+          "overdraft_count": 0,
+          "revenue_share": 1.0
+        },
+        "offer": 67478.75
+      }
+    },
+    "biz_10": {
+      "accuracy": {
+        "business": 1.0,
+        "group": 0.9877,
+        "revenue": 1.0
+      },
+      "collateral_changes_outcome": false,
+      "collateral_flips_decision": false,
+      "collateral_only": {
+        "decision": "approve",
+        "features": {
+          "avg_monthly_revenue": 13143.05,
+          "daily_funder_payments": 0.0,
+          "high_risk_debit_share": 0.0,
+          "nsf_count": 2,
+          "overdraft_count": 0,
+          "revenue_share": 1.0
+        },
+        "offer": 15771.66
+      },
+      "decision": {
+        "flipped": false,
+        "legacy": "approve",
+        "truth": "approve"
+      },
+      "features": {
+        "delta": {
+          "avg_monthly_revenue": 0.0,
+          "daily_funder_payments": 0.0,
+          "high_risk_debit_share": 0.0,
+          "nsf_count": 2,
+          "overdraft_count": 0,
+          "revenue_share": 0.0
+        },
+        "legacy": {
+          "avg_monthly_revenue": 13143.05,
+          "daily_funder_payments": 0.0,
+          "high_risk_debit_share": 0.0,
+          "nsf_count": 2,
+          "overdraft_count": 0,
+          "revenue_share": 1.0
+        },
+        "truth": {
+          "avg_monthly_revenue": 13143.05,
+          "daily_funder_payments": 0.0,
+          "high_risk_debit_share": 0.0,
+          "nsf_count": 0,
+          "overdraft_count": 0,
+          "revenue_share": 1.0
+        }
+      },
+      "mislabels": {
+        "planned": 0,
+        "planned_by_trap": {},
+        "unplanned": 2,
+        "unplanned_by_pattern": {
+          "internal_transfer->nsf": 2
+        }
+      },
+      "n_txns": 162,
+      "offer": {
+        "delta": 0.0,
+        "legacy": 15771.66,
+        "truth": 15771.66
+      },
+      "planned_only": {
+        "decision": "approve",
+        "features": {
+          "avg_monthly_revenue": 13143.05,
+          "daily_funder_payments": 0.0,
+          "high_risk_debit_share": 0.0,
+          "nsf_count": 0,
+          "overdraft_count": 0,
+          "revenue_share": 1.0
+        },
+        "offer": 15771.66
+      }
+    }
+  },
+  "hypotheses": [
+    {
+      "business_id": "biz_01",
+      "observed": "revenue delta 7666.67, funder delta -145.0, offer delta 12100.01 (truth offer 56625.18)",
+      "prediction": "Revenue inflated, funder payments understated \u2192 offer **higher**",
+      "status": "passed"
+    },
+    {
+      "business_id": "biz_02",
+      "observed": "NSF truth 0, legacy 2, offer delta 0.0",
+      "prediction": "NSF = 0 in both; overdraft risk invisible to legacy; offer **unchanged** (risk hidden, not priced)",
+      "status": "failed"
+    },
+    {
+      "business_id": "biz_03",
+      "observed": "mislabels 2, offer delta 0.0, all feature deltas zero: False",
+      "prediction": "Labels and offer **exactly equal**; avg monthly revenue uses history_days / 30",
+      "status": "failed"
+    },
+    {
+      "business_id": "biz_04",
+      "observed": "revenue delta 13333.33, funder delta -310.0, offer delta 22200.0 (truth offer 42449.94)",
+      "prediction": "Revenue inflated, funder payments understated \u2192 offer **higher**",
+      "status": "passed"
+    },
+    {
+      "business_id": "biz_05",
+      "observed": "revenue delta 5179.84, offer delta 6215.8 (truth offer 46226.32)",
+      "prediction": "Revenue inflated \u2192 offer **higher**",
+      "status": "passed"
+    },
+    {
+      "business_id": "biz_06",
+      "observed": "high-risk share delta 0.0039, offer delta 0.0",
+      "prediction": "High-risk share **overstated**; offer **unchanged**",
+      "status": "passed"
+    },
+    {
+      "business_id": "biz_07",
+      "observed": "high-risk share delta -0.0308, offer delta 0.0",
+      "prediction": "High-risk share **understated**; offer **unchanged**",
+      "status": "passed"
+    },
+    {
+      "business_id": "biz_08",
+      "observed": "NSF legacy 92, truth 0; offer legacy 0.0, truth 39230.32",
+      "prediction": "Legacy NSF > 5, truth NSF \u2264 5 \u2192 legacy offer = 0, truth offer > 0 \u2192 **false decline**",
+      "status": "passed"
+    },
+    {
+      "business_id": "biz_09",
+      "observed": "NSF legacy 7, truth 6; offer legacy 0.0, truth 0.0",
+      "prediction": "Truth offer = 0, legacy offer > 0 \u2192 **approves a decline**",
+      "status": "failed"
+    },
+    {
+      "business_id": "biz_10",
+      "observed": "mislabels 2, offer delta 0.0",
+      "prediction": "Labels and offer **exactly equal**",
+      "status": "failed"
+    }
+  ]
+}
