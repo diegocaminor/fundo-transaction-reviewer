@@ -28,9 +28,9 @@ Conventions: RED (test) -> GREEN (impl) -> REFACTOR inside each phase. Specs: SD
 
 ## Phase 2: Schema and shared rules (commit: `feat: add schema, revenue and risk rules`)
 
-- [ ] 2.1 RED `tests/test_schema.py`: `is_revenue` three scenarios, all 13 groups exclude revenue (CF Single revenue rule); `risk_signal_for` mapping.
-- [ ] 2.2 GREEN `src/fundo/schema.py`: `GROUPS` (13 + `none`), display map, TypedDicts, sign-convention docstring, `is_revenue`, `risk_signal_for`.
-- [ ] 2.3 Add record validators (required fields non-null, credit > 0, valid group) with tests (SD Schema completeness, Truth covers all).
+- [x] 2.1 RED `tests/test_schema.py`: `is_revenue` three scenarios, all 13 groups exclude revenue (CF Single revenue rule); `risk_signal_for` mapping.
+- [x] 2.2 GREEN `src/fundo/schema.py`: `GROUPS` (13 + `none`), display map, TypedDicts, sign-convention docstring, `is_revenue`, `risk_signal_for`.
+- [x] 2.3 Add record validators (required fields non-null, credit > 0, valid group) with tests (SD Schema completeness, Truth covers all).
 
 ## Phase 3: Legacy engine (commit: `feat: add frozen legacy keyword engine`)
 
