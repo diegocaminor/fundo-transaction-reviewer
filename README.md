@@ -140,7 +140,7 @@ No test touches the network.
 
 ## Results
 
-Predictions were committed before each measurement and are kept verbatim; failures are recorded, not tuned away. Full detail: `openspec/changes/reviewer-credit-impact/proposal.md` (hypothesis change log).
+Predictions were committed before each measurement and are kept verbatim; failures are recorded, not tuned away. Full detail: `openspec/changes/archive/2026-10-09-reviewer-credit-impact/proposal.md` (hypothesis change log); canonical specs live in `openspec/specs/`.
 
 ### Reviewer: r1 vs r2 (same 7 frozen hypotheses)
 
