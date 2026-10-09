@@ -36,10 +36,10 @@ Conventions: RED (test) -> GREEN (impl) -> REFACTOR inside each phase. Specs: SD
 
 Must be complete and committed BEFORE any trap data exists (anti-overfitting).
 
-- [ ] 3.1 RED `tests/test_legacy.py`: earlier rule wins, no match -> `none`, "N.S.F. FEE" -> `none`, `lucky` false positive, `transfer` breadth, no normalization (LC all scenarios except same-shape/biz_06 data).
-- [ ] 3.2 GREEN `src/fundo/legacy.py`: `RULES` in design order, `classify(txn) -> Label`; `business=True`, revenue/risk via shared functions.
-- [ ] 3.3 Test: label shape equals truth shape; personal credit with group `none` -> `business` true, `revenue` true (LC Same shape, Business defaults).
-- [ ] 3.4 Freeze: add header comment "rules frozen before trap data; do not tune to data".
+- [x] 3.1 RED `tests/test_legacy.py`: earlier rule wins, no match -> `none`, "N.S.F. FEE" -> `none`, `lucky` false positive, `transfer` breadth, no normalization (LC all scenarios except same-shape/biz_06 data).
+- [x] 3.2 GREEN `src/fundo/legacy.py`: `RULES` in design order, `classify(txn) -> Label`; `business=True`, revenue/risk via shared functions.
+- [x] 3.3 Test: label shape equals truth shape; personal credit with group `none` -> `business` true, `revenue` true (LC Same shape, Business defaults).
+- [x] 3.4 Freeze: add header comment "rules frozen before trap data; do not tune to data".
 
 ## Phase 4: Features and offer (commit: `feat: add features and offer`)
 
