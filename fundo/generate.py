@@ -316,6 +316,7 @@ ARCHETYPES = (
             monthly("MEDPRO INSURANCE", 880, 880, "general"),
             monthly("ATHENAHEALTH SERVICES", 740, 740, "general"),
             monthly(("DUKE ENERGY {n}", "AT&T BUSINESS {n}"), 260, 540),
+            sweep(2),
         ),
         traps=(
             trap("NSF RETURN ITEM FEE", 35, 35, "nsf_fee_plain", "nsf",
