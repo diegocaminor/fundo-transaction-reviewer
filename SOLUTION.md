@@ -80,7 +80,6 @@ The model judges meaning; arithmetic, thresholds and authority stay auditable.
 
 ## 7. Tools and AI assistance
 
-- **Claude Code (Anthropic)** was the coding and writing assistant throughout: OpenSpec planning, test-first implementation, verification and drafting these documents.
-- **The author directed every decision:** phase plan, data policy, prediction wording and thresholds, the gate, the r1 → r2 fix, and recording failures instead of tuning them away. The author reviewed plans, results and pull requests.
-- AI mistakes caught along the way (a wrong Wilson bound in a test, a client bug that bypassed the network guard in tests, a miscounted confidence figure) are in the commit history.
-- `gpt-4.1-mini` is the model under test, not a development tool.
+AI-assisted development was used throughout the project. Claude Code was used for implementation, debugging, test execution, and repository changes. OpenSpec was used to structure planning and record design decisions. ChatGPT was used to review architecture choices, hypotheses, experimental methodology, and documentation. All measured results were produced by the committed code and reports; AI-generated suggestions were treated as proposals and verified before being incorporated.
+
+OpenAI `gpt-4.1-mini` is the model under test, not a development tool.
