@@ -51,14 +51,14 @@ Must be complete and committed BEFORE any trap data exists (anti-overfitting).
 
 ## Phase 5: Generator (commit: `feat: add seeded generator and archetypes`)
 
-- [ ] 5.1 RED `tests/test_biz01.py`: card processor deposits, internal transfer credit, Square Capital repay vs Square revenue, NSF fee, high-risk debit, hard negative, instruction-like text all present; description preserved verbatim after reload (SD biz_01 traps, Instruction-like).
-- [ ] 5.2 GREEN `fundo/casa_norte.py`: ~18 hand-written trap lines with truth labels.
-- [ ] 5.3 RED `tests/test_determinism.py`: two `generate` runs into `tmp_path` byte-identical; 10 businesses, `biz_03` history 61 (SD Business set, Byte-identical).
-- [ ] 5.4 RED `tests/test_generate.py`: generator writes `data/traps.json` (txn id → trap name) covering every planted trap; routine descriptions are NOT filtered for legacy keywords (see proposal "Routine data policy").
-- [ ] 5.5 GREEN `fundo/generate.py`: `Archetype`/`LineSpec`, local `Random(seed)`, `END_DATE`, integer cents, sort then counter ids, `sort_keys` JSON; biz_01 routine background (90 days).
-- [ ] 5.6 Add archetypes biz_02-biz_06 per design trap table (routine vocabulary realistic for the business type, not keyword-filtered).
-- [ ] 5.7 Add archetypes biz_07-biz_10 (biz_09: 5 `NSF RETURN ITEM FEE` + 1 `N.S.F.`; biz_10 routine only).
-- [ ] 5.8 Extend `tests/test_schema.py`: truth `revenue == is_revenue(...)` for all rows, key sets equal, ~2000 txns (SD Truth scenarios).
+- [x] 5.1 RED `tests/test_biz01.py`: card processor deposits, internal transfer credit, Square Capital repay vs Square revenue, NSF fee, high-risk debit, hard negative, instruction-like text all present; description preserved verbatim after reload (SD biz_01 traps, Instruction-like).
+- [x] 5.2 GREEN `fundo/casa_norte.py`: ~18 hand-written trap lines with truth labels.
+- [x] 5.3 RED `tests/test_determinism.py`: two `generate` runs into `tmp_path` byte-identical; 10 businesses, `biz_03` history 61 (SD Business set, Byte-identical).
+- [x] 5.4 RED `tests/test_generate.py`: generator writes `data/traps.json` (txn id → trap name) covering every planted trap; routine descriptions are NOT filtered for legacy keywords (see proposal "Routine data policy").
+- [x] 5.5 GREEN `fundo/generate.py`: `Archetype`/`LineSpec`, local `Random(seed)`, `END_DATE`, integer cents, sort then counter ids, `sort_keys` JSON; biz_01 routine background (90 days).
+- [x] 5.6 Add archetypes biz_02-biz_06 per design trap table (routine vocabulary realistic for the business type, not keyword-filtered).
+- [x] 5.7 Add archetypes biz_07-biz_10 (biz_09: 5 `NSF RETURN ITEM FEE` + 1 `N.S.F.`; biz_10 routine only).
+- [x] 5.8 Extend `tests/test_schema.py`: truth `revenue == is_revenue(...)` for all rows, key sets equal, ~2000 txns (SD Truth scenarios).
 
 ## Phase 6: Report and CLI (commit: `feat: add baseline report and CLI`)
 

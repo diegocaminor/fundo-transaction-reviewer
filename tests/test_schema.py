@@ -170,3 +170,40 @@ def test_truth_covers_all_transactions():
     truth["txn_biz_01_0002"] = good_label(group="bogus")
     with pytest.raises(ValueError):
         validate_truth_covers(txns, truth)
+
+
+@pytest.fixture(scope="module")
+def generated(tmp_path_factory):
+    import json
+
+    from fundo.generate import generate
+
+    out = tmp_path_factory.mktemp("schema_gen")
+    generate(42, out)
+    load = lambda name: json.loads((out / name).read_text())
+    return load("transactions.json"), load("ground_truth.json"), load("businesses.json")
+
+
+def test_generated_truth_key_sets_equal_and_valid(generated):
+    txns, truth, businesses = generated
+    validate_truth_covers(txns, truth)
+    for t in txns:
+        validate_transaction(t)
+    for b in businesses:
+        validate_business(b)
+
+
+def test_generated_truth_revenue_follows_rule(generated):
+    txns, truth, _ = generated
+    for t in txns:
+        label = truth[t["transaction_id"]]
+        assert label["revenue"] == is_revenue(t, label["group"], label["business"])
+        assert label["risk_signal"] == risk_signal_for(label["group"])
+        assert label["notes"]
+
+
+def test_generated_volume_is_about_two_thousand(generated):
+    txns, _, _ = generated
+    assert 1800 <= len(txns) <= 2200
+    assert all(t["iso_currency_code"] == "USD" for t in txns)
+    assert all(t["personal_finance_category"]["primary"] for t in txns)
