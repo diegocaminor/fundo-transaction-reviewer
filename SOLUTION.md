@@ -10,7 +10,7 @@ Every number below is **measured** from committed artifacts (`data/*.json`, `dat
 
 **Part 2, credit impact.** Features and the offer are computed under truth, legacy and reviewed labels with the same functions. A Monte Carlo corrupts truth labels at 2/5/10% (200 seeded runs per rate) under two models: realistic confusions, including business/personal flips, and uniform random swaps. A truncation experiment cuts each 90-day business to its last 61 days.
 
-**Part 3, in short** (full plan in `PRODUCTION.md`): shadow the keyword engine with decisions unchanged; promote in stages (suggest only, then non-material corrections, then material ones per error type) behind gates measured on underwriter-adjudicated cases, never on model confidence; version every rule, prompt and threshold and replay a golden set before release; store an immutable record that rebuilds each decline offline; feed underwriter verdicts back into calibration.
+**Part 3** is the one-page production strategy in section 8.
 
 **Skipped, and why.** No few-shot examples or prompt iteration beyond one bug fix, to avoid fitting the prompt to our own synthetic traps. No confidence calibration, which needs labeled production data.
 
@@ -83,3 +83,48 @@ The model judges meaning; arithmetic, thresholds and authority stay auditable.
 AI-assisted development was used throughout the project. Claude Code was used for implementation, debugging, test execution, and repository changes. OpenSpec was used to structure planning and record design decisions. ChatGPT was used to review architecture choices, hypotheses, experimental methodology, and documentation. All measured results were produced by the committed code and reports; AI-generated suggestions were treated as proposals and verified before being incorporated.
 
 OpenAI `gpt-4.1-mini` is the model under test, not a development tool.
+
+## 8. Part 3: production strategy (one page)
+
+One page, no code. It builds on what the evaluation measured: the reviewer gets every credit decision right on our data, but it over-labels funder debt, reports uncalibrated confidence and obeys some injected text.
+
+### 8.1 Shadow deployment and gates to go live
+
+Run the reviewer on every application next to the keyword engine while **decisions keep coming from the keyword engine**. For each application, store both label sets, the features, the offer and the decision under each, so every disagreement can be priced.
+
+Promote in stages, each with its own gate:
+
+1. **Suggest only.** Underwriters see the proposed correction, its 5-second reason and its credit impact (offer change, decision flip). Nothing is applied automatically.
+2. **Auto-apply non-material corrections:** those that move no decision, no NSF/overdraft count and no high-risk share, and change the offer by less than 1%.
+3. **Auto-apply material corrections per error type**, only for types with enough adjudicated history.
+
+Gates are measured on underwriter-adjudicated cases, never on the model's own confidence: lower dollar error than the keyword engine; a low rate of accepted corrections that underwriters reject; no increase in approvals the underwriter would have declined; and a pass on the adversarial set. Funder-debt (`active_advance`) and business→personal corrections stay human-reviewed until their measured precision clears the gate, because one false funder label can erase most of an offer.
+
+### 8.2 Detecting drift when the engine or the classifier changes
+
+Version everything that can change a decision: keyword rules, flag rules, prompt, model id, gate thresholds and the offer formula. Before any new version goes live, replay a frozen golden set (adjudicated transactions plus the adversarial set) and compare decisions, dollar error and correction rates with the current version.
+
+In production, track weekly by segment (bank, business type, history length):
+
+- input mix: description patterns, new counterparties, Plaid categories, amounts;
+- the keyword engine's label mix and the flag rate;
+- the reviewer's correction rate per error type and its confidence distribution;
+- the share of decisions that differ from the keyword engine;
+- the random-audit miss rate with its confidence interval.
+
+A shift beyond the replay baseline pauses further automation until reviewed.
+
+### 8.3 Reproducing declined decisions after keywords change
+
+Each decision writes an immutable record: a hash of the transactions used, the keyword-engine version and its labels, the flag-rule version, the model id and prompt version with the raw model responses, the thresholds, the features, the offer and the formula version. Replaying a decline from that record must rebuild it exactly offline, as this repository does from its committed cache. Keyword changes never rewrite old decisions; re-scoring an applicant creates a new, separately versioned decision.
+
+### 8.4 Underwriter feedback loop
+
+Every accepted, rejected or edited correction is stored as a labeled transaction with its error type and credit impact. That data is used to:
+
+- calibrate confidence per error type, replacing self-reported confidence as the gate;
+- measure precision and recall per error type (funder debt, personal spend);
+- grow the golden set used to approve new versions;
+- propose keyword-rule fixes upstream (the "transfer" → NSF collision is the template).
+
+Feedback only covers flagged transactions, so it is biased toward what the rules already catch. The random audit continues as the unbiased estimate of what the flags miss.
