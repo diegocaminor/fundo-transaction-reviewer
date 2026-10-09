@@ -30,7 +30,7 @@ A stdlib-only Python package (`fundo/`). It generates deterministic Plaid-format
 
 ## Determinism
 
-- A local `random.Random(seed)` is passed explicitly, never the global RNG.
+- Each business gets its own local `random.Random(business_seed(seed, business_id))`, where `business_seed` is the first 8 bytes of sha256(`"{seed}:{business_id}"`). Never the global RNG and never `hash()`. Editing one archetype therefore never changes another business's rows.
 - Fixed `END_DATE = 2026-06-30`; `start = END_DATE - history_days + 1`.
 - Amounts are integer cents internally and emitted as `round(cents/100, 2)`.
 - Rows are sorted by `(business_id, date, description, amount)`, then ids are assigned by counter (`txn_biz_01_0001`).
@@ -85,7 +85,7 @@ The engine is an ordered list of `(keyword, group)` pairs. It does a case-insens
 | biz_06 (sports bar) | Real casino debits plus `LUCKY DRAGON CHINESE BUFFET` | Over-broad `lucky` |
 | biz_07 (auto repair shop) | `DEBT-SETTLEMENT`, `WAGE GARNISH.ORDER` debits (some unpunctuated, caught) | Punctuation |
 | biz_08 | Daily `STRIPE TRANSFER ST-xxxx` payout credits | Substring collision: `nsf` inside "transfer" (rule 13 unreachable) → false decline |
-| biz_09 | 5 × `NSF RETURN ITEM FEE` + 1 × `N.S.F. RETURN ITEM FEE` | Punctuation at the threshold |
+| biz_09 | 5 × `NSF RETURN ITEM FEE` + 1 × `N.S.F. RETURN ITEM FEE`; routine also includes 2 savings sweeps (not traps, added per routine data policy) | Punctuation at the threshold |
 | biz_10 | Routine only | Clean control |
 
 ## Features, Offer, Report
@@ -100,7 +100,7 @@ Features and the offer depend only on `(txns, labels, business)` and never on th
 - daily_funder_payments = sum of active_advance debits / distinct days with such debits (0 if none)
 - offer = 0 if nsf_count > 5, else max(0, 1.2·avg_monthly_revenue − 20·daily_funder_payments)
 
-`baseline_report.json` has the shape `{seed, businesses: [{business_id, name, n_txns, accuracy: {group, business, revenue}, features: {truth, legacy, delta}, offer: {truth, legacy, delta}}]}`, sorted by business_id. Delta = legacy − truth. Stdout shows one row per business.
+`baseline_report.json` has the shape `{businesses: {business_id: {n_txns, accuracy: {group, business, revenue}, features: {truth, legacy, delta}, offer: {truth, legacy, delta}, decision, mislabels: {planned, unplanned, planned_by_trap, unplanned_by_pattern}, planned_only, collateral_only, collateral_flips_decision, collateral_changes_outcome}}, hypotheses: [{business_id, prediction, status, observed}]}`, with keys sorted. Delta = legacy − truth. Stdout shows one row per business.
 
 ## Architecture Decisions
 

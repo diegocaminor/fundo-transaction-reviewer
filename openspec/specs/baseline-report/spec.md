@@ -1,4 +1,4 @@
-# baseline-report Specification (new)
+# baseline-report Specification
 
 ## Purpose
 
@@ -7,12 +7,17 @@ Legacy-vs-truth comparison per business: label accuracy and feature/offer deltas
 ## Requirements
 
 ### Requirement: Report content and command
-`python -m fundo all` MUST generate data, classify, and write `data/baseline_report.json`, and print a table. For each business the report MUST include label accuracy, the features and offer under truth and under legacy, and their deltas. Output MUST be deterministic (sorted keys) and byte-identical across runs.
+`python -m fundo all` MUST generate data, classify, and write `data/baseline_report.json`, print a table, AND ALSO run the review from the committed cache and the sensitivity analysis, writing `data/reviewed_labels.json`, `data/review_report.json` and `data/sensitivity.json`. For each business the baseline report MUST include label accuracy, the features and offer under truth and under legacy, and their deltas. Output MUST be deterministic (sorted keys). All outputs, including pre-existing Phase 1 outputs, MUST be byte-identical across runs and with the same cache and seed, and `all` MUST succeed without `OPENAI_API_KEY`. Phase 1 outputs MUST remain byte-identical to their pre-change content.
 
-#### Scenario: One command, deterministic
-- Given a clean checkout
+#### Scenario: One command, deterministic, offline
+- Given a clean checkout with the committed cache and no API key
 - When `python -m fundo all` runs twice
-- Then all outputs, including `baseline_report.json`, are byte-identical
+- Then all outputs, including the three new files, are byte-identical across runs and `baseline_report.json` equals its Phase 1 content
+
+#### Scenario: Cache incomplete
+- Given a cache missing required entries and no key
+- When `python -m fundo all` runs
+- Then it exits nonzero reporting the miss count
 
 ### Requirement: Per-business predictions
 Each pre-registered prediction below MUST be evaluated by a pure check function implementing it literally, and its status ("passed" or "failed") with the deciding observation MUST be recorded in the report's top-level `hypotheses` list and printed on stdout. Prediction text MUST NOT be rewritten after measurement; a failed prediction is a finding, not a defect to hide, and the criterion MUST NOT be loosened. Tests MUST verify the check functions on synthetic entries and the measured baseline, not require that every prediction passes. Businesses without planted mislabels (`biz_03`, `biz_10`) are predicted to show exact equality: labels and computations are deterministic, so no tolerance is needed. Direction predictions ("offer delta > 0" / "< 0") MUST exceed a materiality threshold of 1% of the truth offer in the predicted direction. This 1% is a materiality threshold chosen by this project to ignore financially irrelevant deltas; it is NOT a requirement of the challenge and NOT a numerical tolerance. Changing a prediction requires written justification in the proposal.
@@ -26,11 +31,13 @@ Each pre-registered prediction below MUST be evaluated by a pure check function 
 - Given overdrafts without NSF fee lines
 - When deltas are computed
 - Then NSF = 0 under both labelings, and offer delta = 0 (overdraft count is not priced)
+- Observed (seed 42): FAILED. Legacy NSF 2 vs truth 0 (routine savings sweeps contain "transfer"); offer delta 0 held.
 
 #### Scenario: biz_03 Trucking, 61 days
 - Given a 61-day history with no planted mislabels
 - When deltas are computed
 - Then legacy labels equal truth labels, offer delta is exactly 0, and avg monthly revenue uses history_days / 30
+- Observed (seed 42): FAILED. 2 collateral `internal_transfer→nsf` mislabels (NSF +2); offer delta exactly 0 held.
 
 #### Scenario: biz_04 Retailer with MCA
 - Given a funder funding credit counted as revenue and daily debits missed by punctuation
@@ -61,11 +68,13 @@ Each pre-registered prediction below MUST be evaluated by a pure check function 
 - Given one "N.S.F." line missed by legacy
 - When deltas are computed
 - Then legacy NSF = 5, truth NSF = 6, truth offer = 0, legacy offer > 0 (approves a decline)
+- Observed (seed 42): FAILED. Legacy NSF 7 (5 plain + 2 sweeps via the substring bug) vs truth 6; both decline. The punctuation miss alone (`planned_only`) would approve $67,478.75; `collateral_changes_outcome` = true.
 
 #### Scenario: biz_10 Consultant control
 - Given a clean control business
 - When deltas are computed
 - Then legacy labels equal truth labels and all feature and offer deltas are exactly 0
+- Observed (seed 42): FAILED. 2 collateral `internal_transfer→nsf` mislabels (NSF +2); offer delta exactly 0 held.
 
 ### Requirement: Collateral mislabels
 The generator MUST record which transactions are planted traps (`data/traps.json`: transaction id → trap name), without changing the label shape. The report MUST count, per business, legacy mislabels on non-trap transactions ("collateral") and MUST flag any business where collateral alone changes the offer decision (offer 0 vs > 0). Routine descriptions MUST NOT be filtered to avoid legacy keywords. A flagged business MUST be treated as a design problem to surface, not fixed by editing routine vocabulary.
