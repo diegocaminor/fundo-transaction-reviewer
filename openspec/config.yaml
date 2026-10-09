@@ -2,19 +2,19 @@ schema: spec-driven
 
 context: |
   Project: fundo-transaction-reviewer (Fundo AI Engineer take-home, greenfield; synthetic Plaid-format data only).
-  Stack: Python (no code yet). Dependencies kept minimal: no frameworks; simplicity is an evaluation criterion.
+  Stack: Python. Dependencies kept minimal: no frameworks; simplicity is an evaluation criterion.
   Goal: LLM reviewer validating labels of a legacy keyword classifier (13 groups + neutral "none"), credit impact analysis, production strategy doc.
   Offer: 1.2 * avg_monthly_revenue - 20 * daily_funder_payments, 0 if NSF > 5. Revenue = business credit AND no excluding group.
   Constraints: LLM spend < $10; one documented command; LLM responses committed as cache (reproducible without API key); ~6-8h effort.
   Boundary: model proposes label corrections; features, offer math, and revenue rule stay in deterministic code. Counterparty text is untrusted.
-  Testing: pytest (intended, not yet installed). Artifacts in English.
+  Testing: pytest (installed in .venv). Artifacts in English.
 
-strict_tdd: false # no test runner installed yet; flip to true once pytest is added in change 1
+strict_tdd: true
 
 testing:
-  runner: pytest (planned)
-  command: "python -m pytest"
-  layers: { unit: planned, integration: planned, e2e: none }
+  runner: pytest (installed)
+  command: ".venv/bin/python -m pytest" # setup: python3 -m venv .venv && .venv/bin/pip install pytest (running the app needs no install)
+  layers: { unit: available, integration: available, e2e: none }
   coverage: none
   quality: { linter: none, type_checker: none, formatter: none }
 
@@ -34,10 +34,10 @@ rules:
   apply:
     - Deterministic seeded generation; no LLM calls in the data phase
     - Never call the LLM without writing the response to the committed cache
-    tdd: false
-    test_command: "python -m pytest"
+    tdd: true
+    test_command: ".venv/bin/python -m pytest"
   verify:
-    test_command: "python -m pytest"
+    test_command: ".venv/bin/python -m pytest"
     build_command: ""
     coverage_threshold: 0
   archive:

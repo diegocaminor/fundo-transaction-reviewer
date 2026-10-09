@@ -1,0 +1,82 @@
+[
+  {
+    "account_id": "acct_biz_01",
+    "bank_charges_nsf_fee": true,
+    "business_id": "biz_01",
+    "history_days": 90,
+    "name": "Casa Norte Restaurant",
+    "type": "restaurant"
+  },
+  {
+    "account_id": "acct_biz_02",
+    "bank_charges_nsf_fee": false,
+    "business_id": "biz_02",
+    "history_days": 90,
+    "name": "Glow Hair Studio",
+    "type": "hair salon"
+  },
+  {
+    "account_id": "acct_biz_03",
+    "bank_charges_nsf_fee": true,
+    "business_id": "biz_03",
+    "history_days": 61,
+    "name": "Ridgeline Freight LLC",
+    "type": "trucking"
+  },
+  {
+    "account_id": "acct_biz_04",
+    "bank_charges_nsf_fee": true,
+    "business_id": "biz_04",
+    "history_days": 90,
+    "name": "Maple & Main Boutique",
+    "type": "retail store"
+  },
+  {
+    "account_id": "acct_biz_05",
+    "bank_charges_nsf_fee": true,
+    "business_id": "biz_05",
+    "history_days": 90,
+    "name": "Keystone Contracting",
+    "type": "contractor"
+  },
+  {
+    "account_id": "acct_biz_06",
+    "bank_charges_nsf_fee": true,
+    "business_id": "biz_06",
+    "history_days": 90,
+    "name": "The Rail Sports Bar",
+    "type": "sports bar"
+  },
+  {
+    "account_id": "acct_biz_07",
+    "bank_charges_nsf_fee": true,
+    "business_id": "biz_07",
+    "history_days": 90,
+    "name": "Precision Auto Care",
+    "type": "auto repair shop"
+  },
+  {
+    "account_id": "acct_biz_08",
+    "bank_charges_nsf_fee": true,
+    "business_id": "biz_08",
+    "history_days": 90,
+    "name": "Brightcart Online",
+    "type": "ecommerce"
+  },
+  {
+    "account_id": "acct_biz_09",
+    "bank_charges_nsf_fee": true,
+    "business_id": "biz_09",
+    "history_days": 90,
+    "name": "Lakeside Family Clinic",
+    "type": "medical clinic"
+  },
+  {
+    "account_id": "acct_biz_10",
+    "bank_charges_nsf_fee": true,
+    "business_id": "biz_10",
+    "history_days": 90,
+    "name": "Northwind Consulting",
+    "type": "consulting"
+  }
+]
