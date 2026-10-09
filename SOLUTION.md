@@ -77,7 +77,7 @@ AI-assisted development was used throughout the project. Claude Code was used fo
 
 OpenAI `gpt-4.1-mini` is the model under test, not a development tool.
 
-## 8. Part 3: production strategy (one page)
+## 8. Part 3: Production strategy
 
 It builds on what we measured: correct decisions on our data, but funder over-labeling, uncalibrated confidence and partial injection resistance.
 

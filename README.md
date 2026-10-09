@@ -225,9 +225,3 @@ Flag coverage of legacy errors is 100% on this dataset, but it is an **optimisti
 ### Credit sensitivity (Part 2)
 
 S1–S3 passed and S4 failed: 6 of 8 approved businesses lose ≥ 1% of their offer when truncated to 61 days (no approve → decline flips). biz_09 flips from decline to approve at 61 days because its earlier NSF events fall outside the window: a short history can hide stress signals, not only revenue. For banks without NSF fees (biz_02), zero NSF is reported as unobserved (`nsf_observable: false`), with overdrafts as the proxy. The offer formula is never changed.
-
-## Deliverables
-
-- [x] Code that runs from a clean checkout and reproduces output from cache
-- [x] `README.md` with copy-paste run and cache-regeneration commands
-- [x] `SOLUTION.md` (2–3 pages plus the one-page Part 3 production strategy): approach, results, model/prompt choices, code vs. model boundary, Part 2 answers, Part 3 page, AI tooling disclosure
