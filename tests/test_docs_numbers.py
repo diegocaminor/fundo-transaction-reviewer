@@ -120,3 +120,30 @@ def test_sensitivity_and_part2_answers():
                            and is_revenue(t, TRUTH[t["transaction_id"]]["group"], TRUTH[t["transaction_id"]]["business"]))
     drop = 1 - (rev("2026-05-01") / (61 / 30)) / (rev("0000") / 3)
     claim(f"biz_10 lost {drop:.0%} of monthly revenue")
+
+
+def test_credit_error_table_follows_the_formula():
+    from fundo.features import compute_features
+    from fundo.offer import compute_offer
+
+    biz = {"business_id": "b", "history_days": 90}
+    t = lambda tid, amount, date="2026-06-01": {"transaction_id": tid, "business_id": "b",
+                                                "date": date, "amount": amount}
+    lab = lambda g: {"group": g, "business": True}
+    offer = lambda rows, labels: compute_offer(compute_features(rows, labels, biz))
+    base, L = [t("rev", 30000.0)], {"rev": lab("none")}
+
+    rows = base + [t("c", 1000.0)]
+    per_dollar = (offer(rows, {**L, "c": lab("none")}) -
+                  offer(rows, {**L, "c": lab("not_average_monthly_revenue")})) / 1000
+    claim(f"| $1 credit wrongly counted as revenue | **+${per_dollar:.2f}** |")
+
+    rows = base + [t("d", -100.0)]
+    per_dollar = (offer(rows, {**L, "d": lab("active_advance")}) - offer(rows, {**L, "d": lab("none")})) / 100
+    claim(f"no other funder | **−${-per_dollar:.0f}** |")
+
+    real = [t(f"f{i}", -310.0, f"2026-0{4 + i // 30}-{1 + i % 28:02d}") for i in range(60)]
+    rows = base + real + [t("d", -100.0, "2026-06-30")]
+    Lf = {**L, **{r["transaction_id"]: lab("active_advance") for r in real}}
+    assert offer(rows, {**Lf, "d": lab("active_advance")}) > offer(rows, {**Lf, "d": lab("none")})
+    claim("lowers the average and *raises* the offer")
