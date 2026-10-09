@@ -4,7 +4,30 @@ LLM-based reviewer that validates labels produced by a legacy keyword transactio
 
 Built for the [Fundo AI Engineer Take-Home Challenge](https://fundo-llc.github.io/fundo-take-home/ai-engineer-challenge/).
 
-> Status: complete. Approach, results and limitations: [`SOLUTION.md`](SOLUTION.md). Production strategy (Part 3): [`PRODUCTION.md`](PRODUCTION.md).
+> Status: complete. Approach, results, limitations and the Part 3 production strategy: [`SOLUTION.md`](SOLUTION.md).
+
+## Quick start
+
+Requires Python 3.11+. No API key and no install are needed to run. Copy and paste, in order:
+
+```bash
+# 1. Get the code
+git clone https://github.com/diegocaminor/fundo-transaction-reviewer.git
+cd fundo-transaction-reviewer
+
+# 2. Re-generate every output from the committed LLM cache (offline, no key)
+python3 -m fundo all
+
+# 3. Confirm the outputs match the committed ones (prints nothing if identical)
+git status --short
+
+# 4. Run the tests (pytest is the only dependency)
+python3 -m venv .venv
+.venv/bin/pip install pytest
+.venv/bin/python -m pytest
+```
+
+Details on each command, the outputs and how to regenerate the cache with a key are in [Running](#running).
 
 ## Context
 
@@ -53,7 +76,7 @@ Also: sensitivity of features and offers to 2%, 5%, and 10% mislabeling rates, p
 
 ### Part 3 — Production strategy
 
-One page, no code: shadow deployment and gating, drift detection on engine/classifier retrains, reproducibility of declined decisions, and the underwriter feedback loop. See `PRODUCTION.md`.
+One page, no code: shadow deployment and gating, drift detection on engine/classifier retrains, reproducibility of declined decisions, and the underwriter feedback loop. See section 8 of `SOLUTION.md`.
 
 ## Classification groups
 
@@ -180,5 +203,4 @@ S1–S3 passed and S4 failed: 6 of 8 approved businesses lose ≥ 1% of their of
 
 - [x] Code that runs from a clean checkout and reproduces output from cache
 - [x] `README.md` with copy-paste run and cache-regeneration commands
-- [x] `SOLUTION.md` (2–3 pages): approach, results, model/prompt choices, code vs. model boundary, Part 2 answers, Part 3 plan, AI tooling disclosure
-- [x] `PRODUCTION.md` (one page): shadow deployment, drift detection, reproducibility, underwriter feedback
+- [x] `SOLUTION.md` (2–3 pages plus the one-page Part 3 production strategy): approach, results, model/prompt choices, code vs. model boundary, Part 2 answers, Part 3 page, AI tooling disclosure
