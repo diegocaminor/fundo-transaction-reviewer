@@ -164,6 +164,20 @@ Changing the prompt, payload or flag rules requires bumping `PROMPT_VERSION` / `
 
 Exit codes: `0` ok, `1` API failure or budget abort, `2` usage error, `3` cache miss without `OPENAI_API_KEY`.
 
+### Review a transactions file you bring
+
+`review-file` runs the legacy engine, flagging and the reviewer on any transactions file, with no ground truth and no businesses file. It reports, per business (`business_id`, or `account_id` if absent), the offer and decision under legacy and reviewed labels, plus every proposed change with its reason.
+
+```bash
+export OPENAI_API_KEY=sk-...                     # new transactions are not in the cache
+python3 -m fundo review-file their_transactions.json --sign plaid --out /tmp/their-review
+```
+
+- **Input:** a JSON list of transactions, or a Plaid-style `{"transactions": [...]}` object. Required per row: `transaction_id`, `date`, `amount`, and `description` (or Plaid's `name`). Optional: `business_id`, `account_id`, `payment_channel`, `merchant_name`, `iso_currency_code`, `personal_finance_category`.
+- **Sign (always declare it):** `--sign credit-positive` (default; this project and the Fundo PDF, credits positive) or `--sign plaid` (native Plaid, positive = money out). A wrong sign inverts every credit, so the command warns first when most `INCOME` transactions are negative.
+- **Inferred:** history length per business from its first and last date. Without `personal_finance_category`, the two rules that use it are switched off.
+- **Output:** `external_review.json` (per-business legacy vs reviewed features, offer and decision; proposed changes) and `reviewed_labels.json` in `--out`. Responses are appended to the cache (`--cache` to use another file), so a second run is offline.
+
 ### Tests
 
 ```bash

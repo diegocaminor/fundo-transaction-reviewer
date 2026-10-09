@@ -1,4 +1,7 @@
-"""Command line: `python -m fundo {all,generate,report,review,sensitivity} [options]`.
+"""Command line: `python -m fundo {all,generate,report,review,sensitivity,review-file} [options]`.
+
+`review-file PATH` reviews transactions we did not generate (no ground truth needed); see
+`fundo/external.py`. Declare the amount sign with --sign.
 
 `all` runs generate -> baseline report -> review (from the committed cache) -> sensitivity.
 Generated files go to --out; the frozen inputs (llm_cache.jsonl, adversarial.json) are read
@@ -14,7 +17,7 @@ import os
 import sys
 from pathlib import Path
 
-from . import llm, review_report, sensitivity, sensitivity_hypotheses
+from . import external, llm, review_report, sensitivity, sensitivity_hypotheses
 from .generate import generate
 from .report import format_scoreboard, format_table, write_report
 
@@ -68,15 +71,60 @@ def _sensitivity(out):
     return 0
 
 
+def _review_file(path, out, cache, sign, refresh):
+    api_key = os.environ.get("OPENAI_API_KEY")
+    try:
+        _, warnings = external.load_transactions(path, sign)
+        for w in warnings:  # shown first: a wrong sign also changes what gets flagged and how many calls run
+            print(f"WARNING: {w}", file=sys.stderr)
+        missing = external.misses(path, cache, sign)
+    except (ValueError, KeyError, json.JSONDecodeError) as e:
+        print(f"Invalid transactions file: {e}", file=sys.stderr)
+        return 2
+    if (missing or refresh) and not api_key:
+        print(f"At least {missing} cache misses for {path}; export OPENAI_API_KEY to review new "
+              "transactions.", file=sys.stderr)
+        return 3
+    if missing or refresh:
+        projected = _projected_usd(missing)
+        print(f"Live calls needed (attempt 0): {missing}; projected spend ${projected:.2f}")
+        if projected > BUDGET_USD:
+            print(f"Projected spend exceeds ${BUDGET_USD}; aborting.", file=sys.stderr)
+            return 1
+    try:
+        doc = external.run(path, out, cache, api_key=api_key, refresh=refresh, sign=sign)
+    except llm.ApiError as e:
+        print(f"OpenAI API failure: {e}", file=sys.stderr)
+        return 1
+    s = doc["summary"]
+    print(f"{s['transactions']} transactions, {s['reviewed']} reviewed {s['status_counts']}, "
+          f"PFC rules {'on' if s['pfc_rules_enabled'] else 'off'}, sign {s['sign']}")
+    print(f"{'business':<16}{'days':>5}{'legacy offer':>15}{'reviewed offer':>16}  decision legacy/reviewed")
+    for bid, b in doc["businesses"].items():
+        print(f"{bid:<16}{b['history_days']:>5}{b['offer']['legacy']:>15.2f}{b['offer']['reviewed']:>16.2f}  "
+              f"{b['decision']['legacy']}/{b['decision']['reviewed']}")
+    print(f"{len(doc['changes'])} proposed changes; details in {out}/external_review.json")
+    return 0
+
+
 def main(argv=None):
     parser = argparse.ArgumentParser(prog="fundo")
-    parser.add_argument("command", choices=("all", "generate", "report", "review", "sensitivity"))
+    parser.add_argument("command", choices=("all", "generate", "report", "review", "sensitivity", "review-file"))
+    parser.add_argument("path", nargs="?", help="transactions JSON file (review-file only)")
+    parser.add_argument("--sign", choices=external.SIGNS, default="credit-positive",
+                        help="amount sign of the input: credit-positive (default) or plaid (positive = money out)")
+    parser.add_argument("--cache", default=str(REPO_DATA / "llm_cache.jsonl"),
+                        help="LLM cache file used by review-file")
     parser.add_argument("--seed", type=int, default=42)
     parser.add_argument("--out", default="data")
     parser.add_argument("--inputs", default=str(REPO_DATA),
                         help="directory with the frozen llm_cache.jsonl and adversarial.json")
     parser.add_argument("--refresh", action="store_true", help="re-call the API for every request")
     args = parser.parse_args(argv)
+    if args.command == "review-file":
+        if not args.path:
+            parser.error("review-file needs the path to a transactions JSON file")
+        return _review_file(args.path, args.out, args.cache, args.sign, args.refresh)
     if args.command in ("all", "generate"):
         generate(args.seed, args.out)
     if args.command in ("all", "report"):
