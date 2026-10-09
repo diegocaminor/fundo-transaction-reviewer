@@ -84,7 +84,7 @@ The engine is an ordered list of `(keyword, group)` pairs. It does a case-insens
 | biz_05 | Owner `ZELLE FROM M LOPEZ PERSONAL` credits (truth business=false) | Business flag hard-coded to true |
 | biz_06 (sports bar) | Real casino debits plus `LUCKY DRAGON CHINESE BUFFET` | Over-broad `lucky` |
 | biz_07 (auto repair shop) | `DEBT-SETTLEMENT`, `WAGE GARNISH.ORDER` debits (some unpunctuated, caught) | Punctuation |
-| biz_08 | `STRIPE TRANSFER ST-xxxx` payout credits | Over-broad `transfer` |
+| biz_08 | Daily `STRIPE TRANSFER ST-xxxx` payout credits | Substring collision: `nsf` inside "transfer" (rule 13 unreachable) → false decline |
 | biz_09 | 5 × `NSF RETURN ITEM FEE` + 1 × `N.S.F. RETURN ITEM FEE` | Punctuation at the threshold |
 | biz_10 | Routine only | Clean control |
 

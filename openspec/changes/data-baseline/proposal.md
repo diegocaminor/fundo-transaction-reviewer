@@ -88,6 +88,14 @@ Written before any data is generated. Delta = legacy − truth. Each trap must p
 | biz_05 Contractor | Owner personal credits in business account | Revenue inflated → offer **higher** |
 | biz_06 Sports bar | "Lucky Dragon" restaurant flagged as gambling (hard negative) | High-risk share **overstated**; offer **unchanged** |
 | biz_07 Auto repair shop | High-risk debits missed by punctuation | High-risk share **understated**; offer **unchanged** |
-| biz_08 Ecommerce | Stripe payouts matched as transfers | Revenue understated → offer **lower** |
+| biz_08 Ecommerce | `STRIPE TRANSFER` payouts match `nsf` inside "tra**nsf**er" | Legacy NSF > 5, truth NSF ≤ 5 → legacy offer = 0, truth offer > 0 → **false decline** |
 | biz_09 Clinic | One "N.S.F." line missed (legacy 5, truth 6) | Truth offer = 0, legacy offer > 0 → **approves a decline** |
-| biz_10 Consultant | Clean control | All feature deltas **≈ 0** |
+| biz_10 Consultant | Clean control | Labels and offer **exactly equal** |
+
+#### Prediction change log
+
+- **biz_08 (2026-10-09).** Original prediction: Stripe payouts matched by rule 13 (`transfer`) → revenue understated → offer lower. Phase 3 tests showed rule 1 (`nsf`) matches the substring inside "transfer", so rule 13 is unreachable and every description containing "transfer" is labeled NSF. The legacy rule is kept unchanged as a realistic substring bug. biz_08 now predicts a false decline through the NSF threshold, the mirror of biz_09 (approves a decline).
+
+#### Routine data policy
+
+Routine descriptions are written to be realistic for each business type. They are NOT filtered to avoid legacy keywords (including "transfer"). Legacy mislabels on non-trap transactions are measured as collateral in the report. If collateral changes an offer decision (0 vs > 0) in a business not predicted to change, or breaks the exact-equality predictions for biz_03/biz_10, that is surfaced as a design problem and not tuned away in the data.

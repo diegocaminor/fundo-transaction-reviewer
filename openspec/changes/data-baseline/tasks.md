@@ -54,9 +54,9 @@ Must be complete and committed BEFORE any trap data exists (anti-overfitting).
 - [ ] 5.1 RED `tests/test_biz01.py`: card processor deposits, internal transfer credit, Square Capital repay vs Square revenue, NSF fee, high-risk debit, hard negative, instruction-like text all present; description preserved verbatim after reload (SD biz_01 traps, Instruction-like).
 - [ ] 5.2 GREEN `fundo/casa_norte.py`: ~18 hand-written trap lines with truth labels.
 - [ ] 5.3 RED `tests/test_determinism.py`: two `generate` runs into `tmp_path` byte-identical; 10 businesses, `biz_03` history 61 (SD Business set, Byte-identical).
-- [ ] 5.4 RED guard test in `tests/test_generate.py`: no routine (`none`-truth) description contains any `legacy.RULES` keyword.
+- [ ] 5.4 RED `tests/test_generate.py`: generator writes `data/traps.json` (txn id → trap name) covering every planted trap; routine descriptions are NOT filtered for legacy keywords (see proposal "Routine data policy").
 - [ ] 5.5 GREEN `fundo/generate.py`: `Archetype`/`LineSpec`, local `Random(seed)`, `END_DATE`, integer cents, sort then counter ids, `sort_keys` JSON; biz_01 routine background (90 days).
-- [ ] 5.6 Add archetypes biz_02-biz_06 per design trap table (traps only; routine vocabulary neutral).
+- [ ] 5.6 Add archetypes biz_02-biz_06 per design trap table (routine vocabulary realistic for the business type, not keyword-filtered).
 - [ ] 5.7 Add archetypes biz_07-biz_10 (biz_09: 5 `NSF RETURN ITEM FEE` + 1 `N.S.F.`; biz_10 routine only).
 - [ ] 5.8 Extend `tests/test_schema.py`: truth `revenue == is_revenue(...)` for all rows, key sets equal, ~2000 txns (SD Truth scenarios).
 
@@ -64,9 +64,9 @@ Must be complete and committed BEFORE any trap data exists (anti-overfitting).
 
 - [ ] 6.1 RED `tests/test_predictions.py`: parametrized biz_01..biz_10 per BR scenarios (|delta| > 1% materiality threshold for direction, biz_03 and biz_10 exact equality, biz_09 NSF 5/6, biz_02 NSF 0/0).
 - [ ] 6.2 RED biz_01 hand-computed expected features/offer from truth (CF Hand-computed biz_01), values derived independently of the engine.
-- [ ] 6.3 GREEN `fundo/report.py`: accuracy, truth/legacy/delta features and offer, `baseline_report.json`, stdout table.
+- [ ] 6.3 GREEN `fundo/report.py`: accuracy, truth/legacy/delta features and offer, collateral mislabel count per business and decision-flip flag (BR Collateral mislabels), `baseline_report.json`, stdout table.
 - [ ] 6.4 GREEN `fundo/cli.py`, `__main__.py`: `all`/`generate`/`report`, `--seed 42`, `--out data/`.
-- [ ] 6.5 Test: `python -m fundo all` twice into `tmp_path` byte-identical (BR One command).
+- [ ] 6.5 Test: `python -m fundo all` run as a subprocess from the repo root (no install, no PYTHONPATH), twice into `tmp_path`, byte-identical (BR One command).
 - [ ] 6.6 If a prediction fails, investigate data/engine; never loosen criteria (log justification in proposal if changed).
 
 ## Phase 7: Data and docs (commit: `docs: commit baseline data and update README`)

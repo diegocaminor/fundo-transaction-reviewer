@@ -53,9 +53,9 @@ Each prediction below MUST be asserted by a test. Businesses without planted mis
 - Then legacy high-risk share is lower than truth, and offer delta = 0
 
 #### Scenario: biz_08 Ecommerce
-- Given Stripe payouts matched by legacy as transfers
+- Given daily "STRIPE TRANSFER" payout credits, which legacy labels `nsf` because "transfer" contains the substring "nsf"
 - When deltas are computed
-- Then legacy revenue is lower and offer delta < 0
+- Then legacy NSF > 5, truth NSF <= 5, legacy offer = 0 and truth offer > 0 (false decline)
 
 #### Scenario: biz_09 Clinic
 - Given one "N.S.F." line missed by legacy
@@ -66,3 +66,11 @@ Each prediction below MUST be asserted by a test. Businesses without planted mis
 - Given a clean control business
 - When deltas are computed
 - Then legacy labels equal truth labels and all feature and offer deltas are exactly 0
+
+### Requirement: Collateral mislabels
+The generator MUST record which transactions are planted traps (`data/traps.json`: transaction id → trap name), without changing the label shape. The report MUST count, per business, legacy mislabels on non-trap transactions ("collateral") and MUST flag any business where collateral alone changes the offer decision (offer 0 vs > 0). Routine descriptions MUST NOT be filtered to avoid legacy keywords. A flagged business MUST be treated as a design problem to surface, not fixed by editing routine vocabulary.
+
+#### Scenario: Collateral is measured, not hidden
+- Given realistic routine descriptions that may contain legacy keywords (e.g. "ONLINE TRANSFER TO SAVINGS")
+- When the report runs
+- Then each business shows its collateral mislabel count, and businesses where collateral flips the offer decision are flagged
