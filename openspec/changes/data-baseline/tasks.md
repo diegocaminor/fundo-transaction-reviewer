@@ -43,11 +43,11 @@ Must be complete and committed BEFORE any trap data exists (anti-overfitting).
 
 ## Phase 4: Features and offer (commit: `feat: add features and offer`)
 
-- [ ] 4.1 RED `tests/test_features.py` (inline hand-computed): 6100.00 / 61 days -> 3000.00; funder 100 / (100+50) / none -> 125.00; no funder -> 0; overdraft-only -> NSF 0 (CF Monthly, Daily funder, Overdraft separate).
-- [ ] 4.2 RED `tests/test_offer.py`: NSF 5 -> 10000.00, NSF 6 -> 0; floor at 0 (1000 vs 3000); overdraft 10 not capped (CF Offer scenarios).
-- [ ] 4.3 GREEN `fundo/features.py`: `compute_features(txns, labels, business)`; rounding 2 dp money, 4 dp ratios; per-day sum then mean over funder-debit days.
-- [ ] 4.4 GREEN `fundo/offer.py`: `compute_offer(features)`.
-- [ ] 4.5 Test: same function on two label sets differs only by labels (CF Features from any label set).
+- [x] 4.1 RED `tests/test_features.py` (inline hand-computed): 6100.00 / 61 days -> 3000.00; funder 100 / (100+50) / none -> 125.00; no funder -> 0; overdraft-only -> NSF 0 (CF Monthly, Daily funder, Overdraft separate).
+- [x] 4.2 RED `tests/test_offer.py`: NSF 5 -> 10000.00, NSF 6 -> 0; floor at 0 (1000 vs 3000); overdraft 10 not capped (CF Offer scenarios).
+- [x] 4.3 GREEN `fundo/features.py`: `compute_features(txns, labels, business)`; rounding 2 dp money, 4 dp ratios; per-day sum then mean over funder-debit days.
+- [x] 4.4 GREEN `fundo/offer.py`: `compute_offer(features)`.
+- [x] 4.5 Test: same function on two label sets differs only by labels (CF Features from any label set).
 
 ## Phase 5: Generator (commit: `feat: add seeded generator and archetypes`)
 
