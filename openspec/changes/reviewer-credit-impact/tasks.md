@@ -60,7 +60,7 @@ Dependency graph: P1 -> P2 -> P3 -> P5 -> P6 -> P7 -> P8. P4 (sensitivity) depen
 - [x] 4.5 RED: `observability` - biz_02 has `nsf_observable=false`, truth `overdraft_count` proxy and manual-review `warning`; observable banks have no warning. (CS: NSF observability / biz_02)
 - [x] 4.6 RED: truncation - for each of the nine 90-day businesses, keep dates >= END_DATE-60d, `history_days=61`, report 90 vs 61 features/offer/decision with offer delta and decision-flip boolean, truth labels, business vs itself; biz_03 excluded from the evidence set. (CS: Truncation compares a business with itself)
 - [x] 4.7 RED: biz_03 carries a low-history warning and informational `nsf_x_90_over_61`; `compute_offer` output unchanged (offer formula untouched, existing offer tests still pass). (CS: Low-history warning)
-- [~] 4.8 GREEN: implement `fundo/sensitivity.py` (done) and write `data/sensitivity.json` (sorted keys) — DEFERRED until the sensitivity hypotheses are reviewed by the user and committed, so results are not seen before predictions. Do NOT wire into CLI yet (Phase 8).
+- [x] 4.8 GREEN: implement `fundo/sensitivity.py` (done) and write `data/sensitivity.json` (sorted keys) — DEFERRED until the sensitivity hypotheses are reviewed by the user and committed, so results are not seen before predictions. Do NOT wire into CLI yet (Phase 8).
 - [x] 4.9 Full suite green; commit (includes `CONFUSION` authored; it is frozen no later than Phase 6).
 
 ## Phase 5: Evaluation report (fixtures only)  | commit: `feat(review-report): add evaluation metrics, dollar error and flag coverage`
