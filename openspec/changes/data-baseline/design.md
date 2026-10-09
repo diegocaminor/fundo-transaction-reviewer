@@ -2,21 +2,21 @@
 
 ## Technical Approach
 
-A stdlib-only Python package (`src/fundo/`). It generates deterministic Plaid-format data with generator-owned ground truth. A frozen keyword engine labels the same transactions. Label-agnostic feature and offer functions run on both label sets, and a report compares them. There is no LLM in this change, so no model/code boundary or cache applies yet. The features, offer and revenue rule are the deterministic code that the next change keeps.
+A stdlib-only Python package (`fundo/`). It generates deterministic Plaid-format data with generator-owned ground truth. A frozen keyword engine labels the same transactions. Label-agnostic feature and offer functions run on both label sets, and a report compares them. There is no LLM in this change, so no model/code boundary or cache applies yet. The features, offer and revenue rule are the deterministic code that the next change keeps.
 
 ## Module Layout
 
 | File | Responsibility |
 |---|---|
-| `pyproject.toml` | src layout, `[tool.pytest.ini_options] pythonpath=["src"]`, pytest as optional dev dep |
-| `src/fundo/schema.py` | `GROUPS` (13 + `none`), `Transaction`/`Label`/`Business` TypedDicts, `is_revenue`, `risk_signal_for`, sign convention docstring |
-| `src/fundo/casa_norte.py` | Hand-written biz_01 trap lines (data only) |
-| `src/fundo/generate.py` | `Archetype`/`LineSpec` templates for biz_02–10, seeded generation, file writing |
-| `src/fundo/legacy.py` | `RULES` list and `classify(txn) -> Label` |
-| `src/fundo/features.py` | `compute_features(txns, labels, business) -> dict` |
-| `src/fundo/offer.py` | `compute_offer(features) -> float` |
-| `src/fundo/report.py` | Builds and prints the legacy-vs-truth report |
-| `src/fundo/cli.py`, `__main__.py` | argparse: `all` / `generate` / `report`, `--seed 42`, `--out data/` |
+| `pyproject.toml` | flat layout (no install needed to run), `[tool.pytest.ini_options] pythonpath=["."]`, pytest as optional dev dep |
+| `fundo/schema.py` | `GROUPS` (13 + `none`), `Transaction`/`Label`/`Business` TypedDicts, `is_revenue`, `risk_signal_for`, sign convention docstring |
+| `fundo/casa_norte.py` | Hand-written biz_01 trap lines (data only) |
+| `fundo/generate.py` | `Archetype`/`LineSpec` templates for biz_02–10, seeded generation, file writing |
+| `fundo/legacy.py` | `RULES` list and `classify(txn) -> Label` |
+| `fundo/features.py` | `compute_features(txns, labels, business) -> dict` |
+| `fundo/offer.py` | `compute_offer(features) -> float` |
+| `fundo/report.py` | Builds and prints the legacy-vs-truth report |
+| `fundo/cli.py`, `__main__.py` | argparse: `all` / `generate` / `report`, `--seed 42`, `--out data/` |
 | `tests/` | See Testing Strategy |
 
 ## Data Model and Files

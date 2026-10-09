@@ -13,7 +13,7 @@ strict_tdd: true
 
 testing:
   runner: pytest (installed)
-  command: ".venv/bin/python -m pytest" # setup: python3 -m venv .venv && .venv/bin/pip install -e ".[dev]"
+  command: ".venv/bin/python -m pytest" # setup: python3 -m venv .venv && .venv/bin/pip install pytest (running the app needs no install)
   layers: { unit: available, integration: available, e2e: none }
   coverage: none
   quality: { linter: none, type_checker: none, formatter: none }
