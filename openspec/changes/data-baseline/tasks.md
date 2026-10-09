@@ -71,7 +71,7 @@ Must be complete and committed BEFORE any trap data exists (anti-overfitting).
 
 ## Phase 7: Data and docs (commit: `docs: commit baseline data and update README`)
 
-- [ ] 7.1 Run `python -m fundo all`; commit `data/*.json`.
-- [ ] 7.2 Test: committed `data/` equals regeneration (SD Committed data matches).
+- [ ] 7.1 Run `python -m fundo all`; commit `data/*.json`. (Generated data baseline already committed after the per-business RNG migration; this step adds report outputs.)
+- [x] 7.2 Test: committed `data/` equals regeneration (SD Committed data matches). Added with the per-business RNG migration.
 - [ ] 7.3 Update `README.md` Running section (`python -m fundo all`, `python -m pytest`, sign convention note).
 - [ ] 7.4 Full `python -m pytest` green.

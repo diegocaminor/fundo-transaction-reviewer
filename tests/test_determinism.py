@@ -98,3 +98,11 @@ def test_business_seed_ignores_hash_randomization():
         outputs.add(out.stdout)
     assert len(outputs) == 1
 
+
+def test_committed_data_matches_regeneration(tmp_path):
+    from pathlib import Path
+
+    committed = Path(__file__).resolve().parent.parent / "data"
+    generate(42, tmp_path)
+    for name in FILES:
+        assert (committed / name).read_bytes() == (tmp_path / name).read_bytes(), name
