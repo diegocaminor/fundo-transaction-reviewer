@@ -5,6 +5,7 @@ Ground truth is assigned per line template, never derived from keywords.
 Amounts are integer cents internally; credit > 0, debit < 0.
 """
 
+import hashlib
 import json
 import random
 from dataclasses import dataclass
@@ -413,11 +414,17 @@ def _rows_for(arch, rng):
     return rows
 
 
+def business_seed(seed, business_id):
+    """Stable per-business seed; sha256 instead of hash(), which is salted per process."""
+    digest = hashlib.sha256(f"{seed}:{business_id}".encode()).digest()
+    return int.from_bytes(digest[:8], "big")
+
+
 def build(seed=42):
-    rng = random.Random(seed)
     rows = []
     for arch in ARCHETYPES:
-        rows.extend(_rows_for(arch, rng))
+        # One stream per business, so editing one archetype never shifts another's data.
+        rows.extend(_rows_for(arch, random.Random(business_seed(seed, arch.business_id))))
     rows.sort(key=lambda r: (r["business_id"], r["date"], r["description"], r["amount"]))
     counters = {}
     txns, truth, traps = [], {}, {}

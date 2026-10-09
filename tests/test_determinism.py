@@ -39,3 +39,62 @@ def test_dates_within_fixed_window(tmp_path):
     biz03 = [t["date"] for t in txns if t["business_id"] == "biz_03"]
     assert min(biz03) >= (END_DATE - timedelta(days=60)).isoformat()
     assert max(t["date"] for t in txns) == END_DATE.isoformat()
+
+
+def _rows_by_business(txns, truth):
+    out = {}
+    for t in txns:
+        out.setdefault(t["business_id"], []).append((t, truth[t["transaction_id"]]))
+    return out
+
+
+def test_changing_one_business_leaves_others_identical(monkeypatch):
+    from dataclasses import replace
+
+    import fundo.generate as gen
+
+    _, txns, truth, _ = gen.build(42)
+    before = _rows_by_business(txns, truth)
+
+    changed = tuple(
+        replace(a, routine=a.routine + (gen.sweep(1),)) if a.business_id == "biz_05" else a
+        for a in gen.ARCHETYPES
+    )
+    monkeypatch.setattr(gen, "ARCHETYPES", changed)
+    _, txns2, truth2, _ = gen.build(42)
+    after = _rows_by_business(txns2, truth2)
+
+    assert before["biz_05"] != after["biz_05"]
+    for biz_id in before:
+        if biz_id != "biz_05":
+            assert before[biz_id] == after[biz_id], biz_id
+
+
+def test_business_seed_is_stable_and_not_builtin_hash():
+    from fundo.generate import business_seed
+
+    # First 8 bytes (big-endian) of sha256(b"42:biz_01").
+    assert business_seed(42, "biz_01") == 6097565595807422632
+    assert business_seed(42, "biz_01") != business_seed(42, "biz_02")
+    assert business_seed(42, "biz_01") != business_seed(7, "biz_01")
+
+
+def test_business_seed_ignores_hash_randomization():
+    import os
+    import subprocess
+    import sys
+    from pathlib import Path
+
+    root = Path(__file__).resolve().parent.parent
+    code = "from fundo.generate import business_seed; print(business_seed(42, 'biz_03'))"
+    outputs = set()
+    for hashseed in ("0", "1", "12345"):
+        env = {**os.environ, "PYTHONHASHSEED": hashseed}
+        env.pop("PYTHONPATH", None)
+        out = subprocess.run(
+            [sys.executable, "-c", code], cwd=root, env=env, capture_output=True, text=True
+        )
+        assert out.returncode == 0, out.stderr
+        outputs.add(out.stdout)
+    assert len(outputs) == 1
+
