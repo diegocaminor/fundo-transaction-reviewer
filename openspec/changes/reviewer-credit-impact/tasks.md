@@ -14,13 +14,13 @@ Dependency graph: P1 -> P2 -> P3 -> P5 -> P6 -> P7 -> P8. P4 (sensitivity) depen
 
 ## Phase 1: Flagging (no LLM)  | commit: `feat(flagging): add frozen flag rules and seeded audit sample`
 
-- [ ] 1.1 RED: `tests/test_flagging.py` - each rule R1..R7 fires on a hand-built txn and does not fire on a near-miss; `N.S.F.` normalizes to `nsf`; R4 masking (digits to `#`, lowercase, whitespace) and count >= 5 with equal amount. (TF: Frozen rules)
-- [ ] 1.2 RED: `use_pfc=False` drops R2 and R3 only; other rules unchanged. (TF: Frozen rules; LR/RE: PFC ablation)
-- [ ] 1.3 RED: determinism - two runs on all 10 businesses give identical `{tid: [rule_ids]}`. (TF: Rules are reproducible)
-- [ ] 1.4 RED: truth/traps isolation - run flagging with `ground_truth.json` and `traps.json` removed or replaced by raising sentinels in a tmp dir; output identical to normal run; static test asserts `flagging.py` source has no import/string of `generate`, `report`, `review_report`, `ground_truth`, `traps`. (TF: Truth and traps are unreachable)
-- [ ] 1.5 RED: audit sample - ranking by `sha256(f"{seed}:audit:{tid}")` per business, size `round(0.05*n_unflagged)` (+/-1), no flagged txn included, identical across two draws, stable between `pfc` and `no_pfc` for txns unflagged in both. (TF: Sample is deterministic and sized)
-- [ ] 1.6 GREEN: implement `fundo/flagging.py` (`FLAG_RULES_VERSION="f1"`, `flag(txns, legacy, businesses, use_pfc)`, `audit_sample(...)`, `INJECTION_RE` import-free placeholder constant owned by flagging or imported from a tiny shared spot; no file I/O). Decide location of `INJECTION_RE` here and let `reviewer.py` import it, to avoid a circular import.
-- [ ] 1.7 Full suite green; commit.
+- [x] 1.1 RED: `tests/test_flagging.py` - each rule R1..R7 fires on a hand-built txn and does not fire on a near-miss; `N.S.F.` normalizes to `nsf`; R4 masking (digits to `#`, lowercase, whitespace) and count >= 5 with equal amount. (TF: Frozen rules)
+- [x] 1.2 RED: `use_pfc=False` drops R2 and R3 only; other rules unchanged. (TF: Frozen rules; LR/RE: PFC ablation)
+- [x] 1.3 RED: determinism - two runs on all 10 businesses give identical `{tid: [rule_ids]}`. (TF: Rules are reproducible)
+- [x] 1.4 RED: truth/traps isolation - run flagging with `ground_truth.json` and `traps.json` removed or replaced by raising sentinels in a tmp dir; output identical to normal run; static test asserts `flagging.py` source has no import/string of `generate`, `report`, `review_report`, `ground_truth`, `traps`. (TF: Truth and traps are unreachable)
+- [x] 1.5 RED: audit sample - ranking by `sha256(f"{seed}:audit:{tid}")` per business, size `round(0.05*n_unflagged)` (+/-1), no flagged txn included, identical across two draws, stable between `pfc` and `no_pfc` for txns unflagged in both. (TF: Sample is deterministic and sized)
+- [x] 1.6 GREEN: implement `fundo/flagging.py` (`FLAG_RULES_VERSION="f1"`, `flag(txns, legacy, businesses, use_pfc)`, `audit_sample(...)`, `INJECTION_RE` import-free placeholder constant owned by flagging or imported from a tiny shared spot; no file I/O). Decide location of `INJECTION_RE` here and let `reviewer.py` import it, to avoid a circular import.
+- [x] 1.7 Full suite green; commit.
 
 ## Phase 2: Cache and urllib client (no real network)  | commit: `feat(llm): add committed JSONL cache and urllib client`
 

@@ -197,3 +197,7 @@ Any later prompt edit means bumping `PROMPT_VERSION` and refilling. Phase 1 outp
 ## Open Questions
 
 - [ ] None blocking. Confusion weights and adversarial items are authored in tasks, before the cache fill.
+
+## Implementation notes
+
+- **Phase 1 flagging (measured 2026-10-09, counts only, no truth consulted).** With PFC: 546 flagged + 74 audit = 620 calls. Without PFC: 485 flagged + 76 audit = 561 calls. Rule hits (with PFC): R1 137, R2 56, R3 152, R4 127, R5 228, R6 74, R7 1. This is above the exploration estimate (300–450); rules were NOT changed in response. Estimated cost for both variants plus the adversarial set stays around $1. Deviations from the design: `flag()` takes no `businesses` argument (no rule needs it); R5 matches short hints as whole tokens and longer hints as token prefixes after removing dots, so `N.S.F.` and `GARNISH.ORDER` match while "transfer" does not match `nsf`.
