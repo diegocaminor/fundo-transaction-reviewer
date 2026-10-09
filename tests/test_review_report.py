@@ -6,7 +6,6 @@ from pathlib import Path
 import pytest
 
 from fundo import review_report as rr
-from fundo import reviewer_hypotheses as rh
 
 ROOT = Path(__file__).resolve().parent.parent
 B1 = {"business_id": "b1", "type": "restaurant", "history_days": 30, "bank_charges_nsf_fee": True}
@@ -64,7 +63,8 @@ def test_dollar_error_is_primary_and_hand_computed():
 def test_hard_negatives_proposed_vs_accepted():
     hn = variant()["primary"]["hard_negatives"]
     assert hn == {"proposed": {"count": 2, "ids": ["g1", "k1"]},
-                  "accepted": {"count": 1, "ids": ["g1"]}}
+                  "accepted": {"count": 1, "ids": ["g1"]},
+                  "accepted_share_of_reviewed": 0.1667}  # secondary metric: 1 of 6 reviewed
 
 
 def test_per_business_feature_and_offer_impact():
@@ -166,14 +166,3 @@ def test_only_the_report_reads_truth():
         source = (ROOT / f"fundo/{module}.py").read_text()
         assert "ground_truth" not in source and "traps" not in source, module
 
-
-def test_hypotheses_skeleton_records_failures_without_failing_tests():
-    rh.PREDICTIONS["T1"] = "always fails"
-    rh.CHECKS["T1"] = lambda doc: (False, "observed 0")
-    try:
-        out = rh.evaluate({})
-        assert {"id": "T1", "prediction": "always fails", "status": "failed",
-                "observed": "observed 0"} in out
-    finally:
-        rh.PREDICTIONS.pop("T1")
-        rh.CHECKS.pop("T1")

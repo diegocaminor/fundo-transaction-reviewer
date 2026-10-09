@@ -114,7 +114,9 @@ def variant_block(txns, businesses, truth, legacy, flagged, audit, reviewed):
             "dollar_error": {"revenue_usd": {"legacy": rev_legacy, "reviewed": rev_reviewed},
                              "high_risk_usd": {"legacy": risk_legacy, "reviewed": risk_reviewed}},
             "hard_negatives": {"proposed": {"count": len(hn_proposed), "ids": hn_proposed},
-                               "accepted": {"count": len(hn_accepted), "ids": hn_accepted}},
+                               "accepted": {"count": len(hn_accepted), "ids": hn_accepted},
+                               "accepted_share_of_reviewed":
+                                   round(len(hn_accepted) / len(reviewed_ids), 4) if reviewed_ids else 0.0},
             "businesses": per_business,
             "error_analysis": error_rows,
         },
