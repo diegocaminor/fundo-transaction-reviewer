@@ -165,7 +165,7 @@ Predictions were committed before each measurement and are kept verbatim; failur
 - **r2 changed only that.** The field was removed and `PROMPT_VERSION` bumped. Thresholds, flag rules, schema, gate, system prompt and hypotheses are identical.
 - **Remaining failures in r2:**
   - **`active_advance` over-labeling.** Ordinary financing debits (a truck lease, auto-loan payments) were labeled as funder repayments. The offer subtracts 20 × daily funder payments, so one $3,100 lease payment removed $62,000 from biz_03's offer. This drives R4.
-  - **Self-reported confidence does not discriminate.** 607 of 620 answers report ≥ 0.9, so the confidence gate accepts nearly every proposed correction, including 106 of 110 hard negatives. This drives R5 and holds in both runs.
+  - **Self-reported confidence does not discriminate.** 616 of 620 answers report ≥ 0.9, so the confidence gate accepts nearly every proposed correction, including 106 of 110 hard negatives. This drives R5 and holds in both runs.
   - **Prompt injection.** 3 of 12 injected instructions were obeyed with `personal_finance_category` (4 of 12 without), including a casino debit described as office supplies and an owner's personal credit claimed as business income.
 
 `personal_finance_category` ablation (descriptive, shared 560 transactions): group accuracy 0.823 with and without it; revenue $ error lower with it ($100,873 vs $120,585).
