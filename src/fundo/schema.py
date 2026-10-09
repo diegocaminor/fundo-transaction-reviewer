@@ -4,7 +4,7 @@ Sign convention (Fundo PDF): credit amounts are positive, debit amounts are
 negative. This is the reverse of native Plaid, where debits are positive.
 """
 
-from typing import TypedDict
+from typing import NotRequired, TypedDict
 
 DISPLAY_NAMES = {
     "not_average_monthly_revenue": "Not average monthly revenue",
@@ -36,9 +36,13 @@ class PersonalFinanceCategory(TypedDict):
 class Transaction(TypedDict):
     transaction_id: str
     business_id: str
+    account_id: str
     date: str
-    amount: float
     description: str
+    amount: float
+    iso_currency_code: str
+    payment_channel: str
+    merchant_name: NotRequired[str | None]
     pending: bool
     transaction_type: str
     personal_finance_category: PersonalFinanceCategory
@@ -74,7 +78,16 @@ def risk_signal_for(group: str) -> str | None:
     return None
 
 
-_TXN_REQUIRED = ("transaction_id", "business_id", "date", "amount", "description")
+_TXN_REQUIRED = (
+    "transaction_id",
+    "business_id",
+    "account_id",
+    "date",
+    "description",
+    "amount",
+    "iso_currency_code",
+    "payment_channel",
+)
 _BIZ_REQUIRED = (
     "business_id",
     "name",

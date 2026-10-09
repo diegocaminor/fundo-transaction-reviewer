@@ -67,8 +67,11 @@ def good_txn(**over):
     t = {
         "transaction_id": "txn_biz_01_0001",
         "business_id": "biz_01",
+        "account_id": "acc_01",
         "date": "2026-06-01",
         "amount": 12.5,
+        "iso_currency_code": "USD",
+        "payment_channel": "ACH",
         "description": "CARD DEPOSIT",
         "transaction_type": "credit",
     }
@@ -81,7 +84,17 @@ def test_valid_transaction_passes():
 
 
 @pytest.mark.parametrize(
-    "field", ["transaction_id", "business_id", "date", "amount", "description"]
+    "field",
+    [
+        "transaction_id",
+        "business_id",
+        "account_id",
+        "date",
+        "amount",
+        "iso_currency_code",
+        "payment_channel",
+        "description",
+    ],
 )
 def test_missing_or_null_required_field(field):
     t = good_txn()

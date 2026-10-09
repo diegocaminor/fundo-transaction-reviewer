@@ -24,7 +24,7 @@ All generated content (descriptions, merchant names, business names, notes, repo
 - Then at least one transaction exists for each trap listed above
 
 ### Requirement: Schema completeness
-Every transaction MUST include all PDF minimum fields (transaction id, business id, date, signed amount, description). Amount sign MUST follow the PDF (credit positive), documented in the schema. `personal_finance_category` MAY be present and MUST be treated as a noisy auxiliary signal, not truth. Bank-level facts (`history_days`, `bank_charges_nsf_fee`, account type) MUST live in the businesses data, not in transactions.
+Every transaction MUST include all PDF minimum fields (`transaction_id`, `business_id`, `account_id`, `date`, `description`, signed `amount`, `iso_currency_code`, `payment_channel`); `merchant_name` is optional. Amount sign MUST follow the PDF (credit positive), documented in the schema. `personal_finance_category` MAY be present and MUST be treated as a noisy auxiliary signal, not truth. Bank-level facts (`history_days`, `bank_charges_nsf_fee`, account type) MUST live in the businesses data, not in transactions.
 
 #### Scenario: Required fields present
 - Given all generated transactions and businesses
