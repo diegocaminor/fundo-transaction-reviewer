@@ -1,0 +1,9 @@
+README.md
+pyproject.toml
+src/fundo/__init__.py
+src/fundo.egg-info/PKG-INFO
+src/fundo.egg-info/SOURCES.txt
+src/fundo.egg-info/dependency_links.txt
+src/fundo.egg-info/requires.txt
+src/fundo.egg-info/top_level.txt
+tests/test_smoke.py

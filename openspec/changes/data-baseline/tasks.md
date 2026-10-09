@@ -22,9 +22,9 @@ Conventions: RED (test) -> GREEN (impl) -> REFACTOR inside each phase. Specs: SD
 
 ## Phase 1: Setup (commit: `chore: add pytest project scaffold`)
 
-- [ ] 1.1 Create `pyproject.toml` (src layout, `pythonpath=["src"]`, pytest dev extra); `.gitignore` already exists.
-- [ ] 1.2 Create `src/fundo/__init__.py`, `tests/__init__.py`, one smoke test; run `python -m pytest`.
-- [ ] 1.3 Edit `openspec/config.yaml`: `strict_tdd: true`, `rules.apply.tdd: true`, testing runner `pytest (installed)`, layers unit/integration.
+- [x] 1.1 Create `pyproject.toml` (src layout, `pythonpath=["src"]`, pytest dev extra); `.gitignore` already exists.
+- [x] 1.2 Create `src/fundo/__init__.py`, `tests/__init__.py`, one smoke test; run `python -m pytest`.
+- [x] 1.3 Edit `openspec/config.yaml`: `strict_tdd: true`, `rules.apply.tdd: true`, testing runner `pytest (installed)`, layers unit/integration.
 
 ## Phase 2: Schema and shared rules (commit: `feat: add schema, revenue and risk rules`)
 
